@@ -15,8 +15,8 @@ for dense_size in lst_dense_size:
     model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}_dense_{}.h5".format(date.today().strftime("%Y%m%d"), dense_size ))
     lc_centerloss_filename = os.path.join(Glb.results_folder, "LC", "lc_centerloss_{}_dense_{}.csv".format(date.today().strftime("%Y%m%d"), dense_size ))
 
-    os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-    os.environ["CUDA_VISIBLE_DEVICES"]=str(gpu_id)
+    #os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+    #os.environ["CUDA_VISIBLE_DEVICES"]=str(gpu_id)
 
 
     data_dir = Glb.images_balanced_folder

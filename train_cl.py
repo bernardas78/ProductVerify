@@ -1,5 +1,5 @@
-from keras.callbacks import TensorBoard
-from keras import losses
+from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras import losses
 
 from tensorflow.keras.callbacks import CSVLogger, ModelCheckpoint, EarlyStopping
 from tensorflow.keras.models import load_model

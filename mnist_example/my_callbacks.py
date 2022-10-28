@@ -1,5 +1,5 @@
-from keras.callbacks import Callback
-from keras.models import Model
+from tensorflow.keras.callbacks import Callback
+from tensorflow.keras.models import Model
 import numpy as np
 import matplotlib.pyplot as plt
 

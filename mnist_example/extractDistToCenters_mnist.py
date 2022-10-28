@@ -1,8 +1,8 @@
-from keras.utils import to_categorical
-from keras.datasets import mnist
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.datasets import mnist
 import numpy as np
 import math
-from keras import backend as K
+from tensorflow.keras import backend as K
 import os
 import pandas as pd
 from matplotlib import pyplot as plt
