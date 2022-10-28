@@ -4,6 +4,8 @@ from tensorflow.keras import losses
 from tensorflow.keras.callbacks import CSVLogger, ModelCheckpoint, EarlyStopping
 from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
+
+import Globals.globalvars
 from centerLossLayer import center_loss
 
 from Globals.globalvars import MyIterator
@@ -58,7 +60,7 @@ def trainModel(epochs, model_clsf_filename, model_centerloss_filename, lc_center
     cb_earlystop = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=5, verbose=1, mode='min', restore_best_weights=True)
     cb_csv_logger = CSVLogger(lc_centerloss_filename, separator=",", append=False)
     cb_save = ModelCheckpoint(model_centerloss_filename, save_best_only=True, monitor='val_loss', mode='min')
-    cb_tensorboard = TensorBoard(log_dir='logs')
+    cb_tensorboard = TensorBoard(log_dir=Globals.globalvars.Glb.logs_folder)
 
     model_cl.fit(train_iterator.get_iterator_xy_ydummy(),
               steps_per_epoch=train_iterator.len(),

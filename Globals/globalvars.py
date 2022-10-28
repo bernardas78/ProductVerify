@@ -29,6 +29,7 @@ class Glb:
         cache_folder = os.path.join(home_folder,'IsKnown_Cache')
         class_mixture_models_folder = os.path.join(home_folder,'ClassMixture_Models')
         amzn_file = os.path.join(home_folder,'amzon.csv')
+        logs_folder = os.path.join(home_folder,'logs')
         #images_folder = '/home/bernardas/IsKnown_Images'
         #images_balanced_folder = os.path.join(images_folder,'Aff_NE_Balanced')
         #results_folder = '/home/bernardas/IsKnown_Results'
@@ -48,6 +49,7 @@ class Glb:
         cache_folder = 'C:/IsKnown_Cache'
         class_mixture_models_folder = 'A:/ClassMixture_Models'
         amzn_file = 'c:/users/bciap/Desktop/amzon.csv'
+        logs_folder = 'logs'
         batch_size = 1024
     else:
         images_folder = 'c:/IsKnown_Images'
@@ -59,6 +61,7 @@ class Glb:
         cache_folder = 'C:/IsKnown_Cache'
         class_mixture_models_folder = 'c:/ClassMixture_Models'
         amzn_file = 'c:/users/bciap/Desktop/amzon.csv'
+        logs_folder = 'logs'
         batch_size = 1024
 
 
