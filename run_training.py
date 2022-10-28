@@ -6,13 +6,13 @@ from Globals.globalvars import Glb
 gpu_id = 0
 epochs = 100
 
-model_clsf_filename = r"A:\IsKnown_Results\Models\model_clsf_from_isVisible_20220811.h5" # 87% acc test
+model_clsf_filename = os.path.join(Glb.results_folder, "Models", "model_clsf_from_isVisible_20220811.h5") # 87% acc test
 
 model_centerloss_filename = os.path.join(Glb.results_folder, "model_centerloss_{}.h5".format(date.today().strftime("%Y%m%d") ))
 lc_centerloss_filename = os.path.join(Glb.results_folder, "lc_centerloss_{}.csv".format(date.today().strftime("%Y%m%d") ))
 
-os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]=str(gpu_id)
+#os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+#os.environ["CUDA_VISIBLE_DEVICES"]=str(gpu_id)
 
 
 data_dir = Glb.images_balanced_folder
