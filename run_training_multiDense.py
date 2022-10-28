@@ -6,7 +6,7 @@ from Globals.globalvars import Glb
 gpu_id = 0
 epochs = 25
 
-model_clsf_filename = r"A:\IsKnown_Results\Models\model_clsf_from_isVisible_20220811.h5" # 87% acc test
+model_clsf_filename = os.path.join(Glb.results_folder, "Models", "model_clsf_from_isVisible_20220811.h5") # 87% acc test
 
 
 lst_dense_size = [512]
