@@ -7,9 +7,10 @@ import base64
 from tfrecord_reader import parser
 import time
 
-set_name="Train10"
-set_name="Train10"
-set_name="Val"
+set_name="Train"
+#set_name="Train10"
+#set_name="Val"
+
 batch_size=32
 div255_resnet = "div255"
 
