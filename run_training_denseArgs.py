@@ -10,8 +10,11 @@ epochs = 25
 model_clsf_filename = os.path.join(Glb.results_folder, "Models", "model_clsf_from_isVisible_20220811.h5") # 87% acc test
 
 
-#lst_dense_size = [512]
-lst_dense_size = [ sys.argv[1] ]
+if len(sys.argv)>1:
+    lst_dense_size = [ sys.argv[1] ]
+else:
+    lst_dense_size = [512]
+
 print( "lst_dense_size:{}".format(lst_dense_size[0] ) )
 
 for dense_size in lst_dense_size:
@@ -23,12 +26,14 @@ for dense_size in lst_dense_size:
 
 
     data_dir = Glb.images_balanced_folder
+    tfrecrod_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
 
     model_cl = train_cl.trainModel(epochs=epochs,
                                    model_clsf_filename=model_clsf_filename,
                                    model_centerloss_filename=model_centerloss_filename,
                                    lc_centerloss_filename=lc_centerloss_filename,
                                    data_dir=data_dir,
+                                   tfrecrod_dir=tfrecrod_dir,
                                    lambda_centerloss=0.1,
                                    dense_size=dense_size
                                    )
