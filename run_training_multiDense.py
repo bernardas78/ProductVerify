@@ -20,12 +20,14 @@ for dense_size in lst_dense_size:
 
 
     data_dir = Glb.images_balanced_folder
+    tfrecrod_dir = os.path.join( Glb.images_folder, "PV_TFRecord")
 
     model_cl = train_cl.trainModel(epochs=epochs,
                                    model_clsf_filename=model_clsf_filename,
                                    model_centerloss_filename=model_centerloss_filename,
                                    lc_centerloss_filename=lc_centerloss_filename,
                                    data_dir=data_dir,
+                                   tfrecrod_dir=tfrecrod_dir,
                                    lambda_centerloss=0.1,
                                    dense_size=dense_size
                                    )

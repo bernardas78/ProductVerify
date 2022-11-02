@@ -8,14 +8,14 @@ from tensorflow.keras.optimizers import Adam
 import Globals.globalvars
 from centerLossLayer import center_loss
 
-from Globals.globalvars import MyIterator
+from Globals.globalvars import MyIterator, MyTfrecordIterator
 import os
 #from ModelArch.make_cl_from_clsf import make_model_cl
 from ModelArch.make_cl_from_clsf_addDense import make_model_cl
 #from ModelArch.make_cl_from_clsf_removeDense_addDense import make_model_cl
 
 
-def trainModel(epochs, model_clsf_filename, model_centerloss_filename, lc_centerloss_filename, data_dir, lambda_centerloss, dense_size=64):
+def trainModel(epochs, model_clsf_filename, model_centerloss_filename, lc_centerloss_filename, data_dir, tfrecord_dir, lambda_centerloss, dense_size=64):
 
     crop_range = 1  # number of pixels to crop image (if size is 235, crops are 0-223, 1-224, ... 11-234)
     batch_size = 32
@@ -27,12 +27,24 @@ def trainModel(epochs, model_clsf_filename, model_centerloss_filename, lc_center
     data_dir_val = os.path.join(data_dir, "Val")
     data_dir_test = os.path.join(data_dir, "Test")
 
+    tfrecord_filepath_train10 = os.path.join ( tfrecord_dir, "{}.tfrecords".format("Train10") )
+    tfrecord_filepath_train = os.path.join ( tfrecord_dir, "{}.tfrecords".format("Train") )
+    tfrecord_filepath_val = os.path.join ( tfrecord_dir, "{}.tfrecords".format("Val") )
+    #tfrecrod_filepath_train10 = os.path.join ( r"A:\IsKnown_Images\PV_TFRecord", "{}.tfrecords".format("Train10") )
+
+    train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train)
+    val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_val)
+
+    #train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
+    #val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
+
+    #train_iterator = MyIterator(data_dir_train)
+    #val_iterator = MyIterator(data_dir_val)
+    #test_iterator = MyIterator(data_dir_test)
+
     #train_iterator = MyIterator(data_dir_train10)
     #val_iterator = MyIterator(data_dir_train10)
     #test_iterator = MyIterator(data_dir_train10)
-    train_iterator = MyIterator(data_dir_train)
-    val_iterator = MyIterator(data_dir_val)
-    test_iterator = MyIterator(data_dir_test)
     #train_iterator = Glb_Iterators.get_iterator_xy_ydummy(data_dir_train10)
     #val_iterator = Glb_Iterators.get_iterator_xy_ydummy(data_dir_train10)
     #test_iterator = Glb_Iterators.get_iterator_xy_ydummy(data_dir_train10)
