@@ -68,6 +68,8 @@ def trainModel(epochs, model_clsf_filename, model_centerloss_filename, lc_center
                      )
 
     print (model_cl.summary())
+    print ("train_iterator.len():{}".format(train_iterator.len()))
+    print ("val_iterator.len():{}".format(val_iterator.len()))
 
     cb_earlystop = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=5, verbose=1, mode='min', restore_best_weights=True)
     cb_csv_logger = CSVLogger(lc_centerloss_filename, separator=",", append=False)
