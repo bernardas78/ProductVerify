@@ -15,7 +15,7 @@ from ModelArch.make_cl_from_clsf_addDense import make_model_cl
 #from ModelArch.make_cl_from_clsf_removeDense_addDense import make_model_cl
 
 
-def trainModel(epochs, model_clsf_filename, model_centerloss_filename, lc_centerloss_filename, data_dir, tfrecord_dir, lambda_centerloss, dense_size=64):
+def trainModel(epochs, patience, model_clsf_filename, model_centerloss_filename, lc_centerloss_filename, data_dir, tfrecord_dir, lambda_centerloss, dense_size=64):
 
     crop_range = 1  # number of pixels to crop image (if size is 235, crops are 0-223, 1-224, ... 11-234)
     batch_size = 32
@@ -71,7 +71,7 @@ def trainModel(epochs, model_clsf_filename, model_centerloss_filename, lc_center
     print ("train_iterator.len():{}".format(train_iterator.len()))
     print ("val_iterator.len():{}".format(val_iterator.len()))
 
-    cb_earlystop = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=5, verbose=1, mode='min', restore_best_weights=True)
+    cb_earlystop = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=patience, verbose=1, mode='min', restore_best_weights=True)
     cb_csv_logger = CSVLogger(lc_centerloss_filename, separator=",", append=False)
     cb_save = ModelCheckpoint(model_centerloss_filename, save_best_only=True, monitor='val_loss', mode='min')
     cb_tensorboard = TensorBoard(log_dir=Globals.globalvars.Glb.logs_folder)
