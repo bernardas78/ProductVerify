@@ -6,6 +6,7 @@ import numpy as np
 import base64
 from tfrecord_reader import parser
 import time
+import random
 
 set_name="Train"
 #set_name="Train10"
@@ -46,6 +47,7 @@ def _int64_feature(value):
 allfiles_path = []
 for barcode_path in os.listdir(img_filepath):
     allfiles_path += [ os.path.join(img_filepath,barcode_path,filepath) for filepath in os.listdir( os.path.join (img_filepath,barcode_path )) ]
+random.shuffle(allfiles_path)
 
 barcodes = os.listdir(img_filepath)
 

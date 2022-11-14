@@ -1,0 +1,39 @@
+import pandas as pd
+from Globals.globalvars import Glb
+import os
+import time
+import numpy as np
+from sklearn.metrics import roc_curve, roc_auc_score
+import pickle
+from matplotlib import pyplot as plt
+
+lst_cnt_neurs = [ 512, 256, 128, 64, 32, 16, 8, 4, 2]
+cnt_classes = 194
+
+def visualize_cl(dists_filename):
+    df = pd.read_csv(dists_filename, header=0)
+    true_lbl = "Correct: {:.3f}+/-{:.3f}".format ( np.mean(df[df.correct==1].dist), np.std(df[df.correct==1].dist) )
+    false_lbl = "Incorrect: {:.3f}+/-{:.3f}".format ( np.mean(df[df.correct==0].dist), np.std(df[df.correct==0].dist) )
+    myrange = (0,np.max(df.dist))
+    #plt.ticklabel_format(useOffset=False, style='plain')
+    plt.hist( np.repeat(df[df.correct==1].dist, (cnt_classes-1)), bins=50, color="g", alpha=0.3, label=true_lbl,range=myrange) #repeat 193 times so that #true = #false
+    plt.hist( df[df.correct==0].dist, bins=50, color="r", alpha=0.3, label=false_lbl, range=myrange)
+    lgn = plt.legend()
+
+    # align legend texts right
+    max_shift = max([t.get_window_extent().width for t in lgn.get_texts()])
+    for t in lgn.get_texts():
+        t.set_ha('right')  # ha is alias for horizontalalignment
+        temp_shift = max_shift - t.get_window_extent().width
+        t.set_position((temp_shift, 0))
+
+    plt.title("Distance from Center ~ Correctness")
+    plt.xlabel("Distance from Class Center")
+    plt.ylabel("Count of Samples")
+    plt.savefig( os.path.join ( Glb.results_folder, 'Dists', 'dists_{}.png'.format(prelast_size)))
+    plt.close()
+
+for prelast_size in lst_cnt_neurs:
+    dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}.csv".format(prelast_size) )
+
+    visualize_cl(dists_filename)

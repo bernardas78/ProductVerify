@@ -3,19 +3,28 @@ import math
 from tensorflow.keras import backend as K
 from tensorflow.keras.models import load_model
 import os
-import centerLossLayer
 import pandas as pd
 from matplotlib import pyplot as plt
+import sys
 
-from Globals.globalvars import Glb, MyIterator
+sys.path.insert(0,'..')
+
+import centerLossLayer
+from Globals.globalvars import Glb, MyIterator, MyTfrecordIterator
+
 
 data_dir = Glb.images_balanced_folder
 cnt_classes = 194
 
-prelast_size = 512 #128
-model_cl_date = "20221024_dense_{}".format(prelast_size)
+prelast_size = int(sys.argv[1]) #512
+model_cl_date = "20221108_dense_{}".format(prelast_size)
 
-dists_filename = os.path.join ( Glb.results_folder, "dists_{}.csv".format(prelast_size) )
+tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
+
+tfrecord_filepath = os.path.join(tfrecord_dir, "{}.tfrecords".format("Val"))
+#tfrecord_filepath = os.path.join(tfrecord_dir, "{}.tfrecords".format("Train"))
+
+dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}.csv".format(prelast_size) )
 df = pd.DataFrame (columns = ["correct", "dist"] )
 df.to_csv(dists_filename, mode="w", header=True, index=False)
 
@@ -34,18 +43,6 @@ def dists_to_center_sqsum(centers, prelast_activations):
         delta_datapoint = centers - datapoint
         dists [i,:] = np.sum(delta_datapoint**2, axis=1)
     return dists
-
-def visualize_cl():
-    df = pd.read_csv(dists_filename, header=0)
-    true_lbl = "True: {:.3f}+/-{:.3f}".format ( np.mean(df[df.correct==1].dist), np.std(df[df.correct==1].dist) )
-    false_lbl = "False: {:.3f}+/-{:.3f}".format ( np.mean(df[df.correct==0].dist), np.std(df[df.correct==0].dist) )
-    plt.hist( np.repeat(df[df.correct==1].dist, 193), bins=50, color="g", alpha=0.3, label=true_lbl) #repeat 193 times so that #true = #false
-    plt.hist( df[df.correct==0].dist, bins=50, color="r", alpha=0.3, label=false_lbl)
-    plt.legend()
-    plt.savefig( os.path.join ( Glb.results_folder, 'dists_{}.png'.format(prelast_size)))
-    plt.close()
-    #print (true_lbl)
-    #print (false_lbl)
 
 # Load model
 model_cl_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}.h5".format (model_cl_date) )
@@ -70,16 +67,12 @@ centers = cl_layer.get_weights()[0]
 assert (centers.shape==(cnt_classes,prelast_size))
 
 # load data
-#data_dir_train10 = os.path.join(data_dir, "Train10")
-data_dir_train = os.path.join(data_dir, "Train")
-data_dir_val = os.path.join(data_dir, "Val")
-#my_iterator = MyIterator(data_dir_train)
-my_iterator = MyIterator(data_dir_val)
+my_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath)
 data_yielder = my_iterator.get_iterator_xy_ydummy()
 
 # compute distance from center and log to file
-#for batch_id in range(my_iterator.len()):
-for batch_id in range(int(my_iterator.len() / 5)):  #full train set will take 4 hours
+for batch_id in range(my_iterator.len()):
+#for batch_id in range(int(my_iterator.len() / 20)):  #full train set will take 4 hours
     if batch_id%100==0:
         print ("Batch {}/{}".format(batch_id,my_iterator.len()))
     # get data
@@ -111,4 +104,3 @@ for i in range( y.shape[0] ):
     print ( "dist_center_sqsum:{}; cl:{}".format(dist_center_sqsum, cl[i][0]))
     assert math.isclose(dist_center_sqsum, cl[i][0], rel_tol=1e-4)
 
-visualize_cl()
