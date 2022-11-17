@@ -1,10 +1,5 @@
-import pandas as pd
 from matplotlib import pyplot as plt, cm, font_manager
-from Globals.globalvars import Glb
-import os
-import time
 import numpy as np
-from sklearn.metrics import roc_curve, roc_auc_score
 import pickle
 
 lst_fpr = {}

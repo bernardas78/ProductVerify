@@ -3,7 +3,7 @@ import math
 from tensorflow.keras import backend as K
 from tensorflow.keras.models import load_model
 import os
-import centerLossLayer
+from CenterLoss.centerLossLayer_Eucl import centerLossLayer
 import pandas as pd
 from matplotlib import pyplot as plt
 
@@ -51,7 +51,7 @@ def visualize_cl():
 # Load model
 model_cl_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}.h5".format (model_cl_date) )
 print ("Loading {}".format(model_cl_filename))
-model_cl = load_model( model_cl_filename , custom_objects={'CenterLossLayer': centerLossLayer.CenterLossLayer, 'center_loss': centerLossLayer.center_loss} )
+model_cl = load_model(model_cl_filename, custom_objects={'CenterLossLayer': centerLossLayer.CenterLossLayer, 'center_loss': centerLossLayer.center_loss})
 print ("Loaded")
 
 # centerloss layer

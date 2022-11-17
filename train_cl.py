@@ -6,9 +6,9 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
 
 import Globals.globalvars
-from centerLossLayer import center_loss
+from CenterLoss.centerLossLayer_Eucl import center_loss
 
-from Globals.globalvars import MyIterator, MyTfrecordIterator
+from Globals.globalvars import MyTfrecordIterator
 import os
 #from ModelArch.make_cl_from_clsf import make_model_cl
 from ModelArch.make_cl_from_clsf_addDense import make_model_cl

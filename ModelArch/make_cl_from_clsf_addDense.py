@@ -3,7 +3,7 @@
 
 from tensorflow.keras.layers import Input, Dense
 from tensorflow import keras
-from centerLossLayer import CenterLossLayer
+from CenterLoss.centerLossLayer_Eucl import CenterLossLayer
 
 def make_model_cl (model_clsf, dense_size=64):
 

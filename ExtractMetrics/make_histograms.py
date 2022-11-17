@@ -1,16 +1,15 @@
 import pandas as pd
 from Globals.globalvars import Glb
 import os
-import time
 import numpy as np
-from sklearn.metrics import roc_curve, roc_auc_score
-import pickle
 from matplotlib import pyplot as plt
 
 lst_cnt_neurs = [ 512, 256, 128, 64, 32, 16, 8, 4, 2]
 cnt_classes = 194
 
-def visualize_cl(dists_filename):
+def visualize_cl(prelast_size):
+    dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}.csv".format(prelast_size) )
+
     df = pd.read_csv(dists_filename, header=0)
     true_lbl = "Correct: {:.3f}+/-{:.3f}".format ( np.mean(df[df.correct==1].dist), np.std(df[df.correct==1].dist) )
     false_lbl = "Incorrect: {:.3f}+/-{:.3f}".format ( np.mean(df[df.correct==0].dist), np.std(df[df.correct==0].dist) )
@@ -27,13 +26,12 @@ def visualize_cl(dists_filename):
         temp_shift = max_shift - t.get_window_extent().width
         t.set_position((temp_shift, 0))
 
-    plt.title("Distance from Center ~ Correctness")
+    plt.title("Distance from Center ~ Correctness, {} neurons in CL layer".format(prelast_size))
     plt.xlabel("Distance from Class Center")
     plt.ylabel("Count of Samples")
     plt.savefig( os.path.join ( Glb.results_folder, 'Dists', 'dists_{}.png'.format(prelast_size)))
     plt.close()
 
 for prelast_size in lst_cnt_neurs:
-    dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}.csv".format(prelast_size) )
 
-    visualize_cl(dists_filename)
+    visualize_cl(prelast_size)
