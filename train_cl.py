@@ -32,11 +32,11 @@ def trainModel(epochs, patience, model_clsf_filename, model_centerloss_filename,
     tfrecord_filepath_val = os.path.join ( tfrecord_dir, "{}.tfrecords".format("Val") )
     #tfrecrod_filepath_train10 = os.path.join ( r"A:\IsKnown_Images\PV_TFRecord", "{}.tfrecords".format("Train10") )
 
-    #train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train)
-    #val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_val)
+    train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train)
+    val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_val)
 
-    train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
-    val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
+    #train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
+    #val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
 
     #train_iterator = MyIterator(data_dir_train)
     #val_iterator = MyIterator(data_dir_val)

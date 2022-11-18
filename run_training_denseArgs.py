@@ -26,9 +26,9 @@ else:
     patience = 5
 
 if len(sys.argv)>4:
-    distName = int(sys.argv[4])
+    distName = sys.argv[4]
 else:
-    distName = "Eucl"
+    distName = "Manhattan"
 
 print( "lst_dense_size:{}".format(lst_dense_size[0] ) )
 print( "epochs:{}".format( epochs ) )
