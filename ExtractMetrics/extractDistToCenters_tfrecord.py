@@ -8,18 +8,21 @@ import sys
 
 sys.path.insert(0,'..')
 
-from CenterLoss.centerLossLayer_Eucl import CenterLossLayer, center_loss
+from CenterLoss.centerLossLayer import CenterLossLayer, center_loss
 from Globals.globalvars import Glb, MyTfrecordIterator
 
+distName = "Eucl"
 
 data_dir = Glb.images_balanced_folder
 cnt_classes = 194
 
 prelast_size = int(sys.argv[1]) #512
-model_cl_date = "20221108_dense_{}".format(prelast_size)
+#prelast_size = 512
+model_cl_date = "20221118_dense_{}".format(prelast_size)
 
 tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
 
+#tfrecord_filepath = os.path.join(tfrecord_dir, "{}.tfrecords".format("Train10"))
 tfrecord_filepath = os.path.join(tfrecord_dir, "{}.tfrecords".format("Val"))
 #tfrecord_filepath = os.path.join(tfrecord_dir, "{}.tfrecords".format("Train"))
 
@@ -46,7 +49,7 @@ def dists_to_center_sqsum(centers, prelast_activations):
 # Load model
 model_cl_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}.h5".format (model_cl_date) )
 print ("Loading {}".format(model_cl_filename))
-model_cl = load_model(model_cl_filename, custom_objects={'CenterLossLayer': CenterLossLayer, 'center_loss': center_loss})
+model_cl = load_model(model_cl_filename, custom_objects={'CenterLossLayer': CenterLossLayer(distName), 'center_loss': center_loss(distName)})
 print ("Loaded")
 
 # centerloss layer

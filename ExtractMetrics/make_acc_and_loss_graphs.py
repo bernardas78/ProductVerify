@@ -4,8 +4,12 @@ import os
 from matplotlib import pyplot as plt
 import numpy as np
 
-x_tick_points = np.arange(1,10)
-lst_cnt_neurs = 2**x_tick_points
+#x_tick_points = np.arange(1,10)
+#lst_cnt_neurs = 2**x_tick_points
+
+lst_cnt_neurs = np.array([2,4,8,16,32,64,128,256,512,768,1024,1536,2048])
+x_tick_points = np.log2(lst_cnt_neurs)
+
 lst_acc = []
 lst_softmax_loss = []
 lst_total_loss = []
@@ -30,13 +34,13 @@ plt.plot( np.log2(lst_cnt_neurs), lst_acc, color="orange")
 plt.title ("Classifier accuracy ~ Neuron Count in CL layer")
 plt.xlabel ("Neuron Count")
 plt.ylabel ("Val. Accuracy, %")
-plt.xticks(x_tick_points,lst_cnt_neurs)
+plt.xticks(x_tick_points,lst_cnt_neurs,rotation=90)
 plt.savefig ( os.path.join ( Glb.results_folder, "Dists", "acc.png" ) )
 plt.close()
 
 plt.fill_between (x_tick_points, lst_softmax_loss, label="Softmax Loss")
 plt.fill_between (x_tick_points, lst_total_loss, lst_softmax_loss, label="Center Loss")
-plt.xticks(x_tick_points,lst_cnt_neurs)
+plt.xticks(x_tick_points,lst_cnt_neurs,rotation=90)
 plt.legend()
 plt.title ("Loss ~ Neuron Count in CL layer")
 plt.xlabel ("Neuron Count")

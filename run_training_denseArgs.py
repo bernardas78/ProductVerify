@@ -25,10 +25,15 @@ if len(sys.argv)>3:
 else:
     patience = 5
 
+if len(sys.argv)>4:
+    distName = int(sys.argv[4])
+else:
+    distName = "Eucl"
 
 print( "lst_dense_size:{}".format(lst_dense_size[0] ) )
 print( "epochs:{}".format( epochs ) )
 print( "patience:{}".format(patience ) )
+print( "distance type:{}".format(distName))
 
 for dense_size in lst_dense_size:
     model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}_dense_{}.h5".format(date.today().strftime("%Y%m%d"), dense_size ))
@@ -49,5 +54,6 @@ for dense_size in lst_dense_size:
                                    data_dir=data_dir,
                                    tfrecord_dir=tfrecord_dir,
                                    lambda_centerloss=0.1,
-                                   dense_size=dense_size
+                                   dense_size=dense_size,
+                                   distName=distName
                                    )

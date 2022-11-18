@@ -4,7 +4,7 @@ import os
 import numpy as np
 from matplotlib import pyplot as plt
 
-lst_cnt_neurs = [ 512, 256, 128, 64, 32, 16, 8, 4, 2]
+lst_cnt_neurs = [ 1024, 768, 8, 4, 2] #[ 2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
 cnt_classes = 194
 
 def visualize_cl(prelast_size):

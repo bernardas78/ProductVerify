@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
 
 import Globals.globalvars
-from CenterLoss.centerLossLayer_Eucl import center_loss
+from CenterLoss.centerLossLayer import center_loss
 
 from Globals.globalvars import MyTfrecordIterator
 import os
@@ -15,7 +15,7 @@ from ModelArch.make_cl_from_clsf_addDense import make_model_cl
 #from ModelArch.make_cl_from_clsf_removeDense_addDense import make_model_cl
 
 
-def trainModel(epochs, patience, model_clsf_filename, model_centerloss_filename, lc_centerloss_filename, data_dir, tfrecord_dir, lambda_centerloss, dense_size=64):
+def trainModel(epochs, patience, model_clsf_filename, model_centerloss_filename, lc_centerloss_filename, data_dir, tfrecord_dir, lambda_centerloss, dense_size, distName):
 
     crop_range = 1  # number of pixels to crop image (if size is 235, crops are 0-223, 1-224, ... 11-234)
     batch_size = 32
@@ -32,11 +32,11 @@ def trainModel(epochs, patience, model_clsf_filename, model_centerloss_filename,
     tfrecord_filepath_val = os.path.join ( tfrecord_dir, "{}.tfrecords".format("Val") )
     #tfrecrod_filepath_train10 = os.path.join ( r"A:\IsKnown_Images\PV_TFRecord", "{}.tfrecords".format("Train10") )
 
-    train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train)
-    val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_val)
+    #train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train)
+    #val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_val)
 
-    #train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
-    #val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
+    train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
+    val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
 
     #train_iterator = MyIterator(data_dir_train)
     #val_iterator = MyIterator(data_dir_val)
@@ -59,9 +59,9 @@ def trainModel(epochs, patience, model_clsf_filename, model_centerloss_filename,
     model_clsf = load_model(model_clsf_filename)
 
     #model_cl = make_model_cl(model_clsf)
-    model_cl = make_model_cl(model_clsf=model_clsf,dense_size=dense_size)
+    model_cl = make_model_cl(model_clsf=model_clsf,dense_size=dense_size, distName=distName)
 
-    model_cl.compile(loss=[losses.categorical_crossentropy, center_loss],
+    model_cl.compile(loss=[losses.categorical_crossentropy, center_loss(distName)],
                   optimizer=Adam(learning_rate=0.001), # default LR: 0.001
                   metrics=['accuracy'],
                   loss_weights=[1, lambda_centerloss]

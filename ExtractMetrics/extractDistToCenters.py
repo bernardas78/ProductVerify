@@ -3,7 +3,7 @@ import math
 from tensorflow.keras import backend as K
 from tensorflow.keras.models import load_model
 import os
-from CenterLoss.centerLossLayer_Eucl import centerLossLayer
+from CenterLoss.centerLossLayer import centerLossLayer
 import pandas as pd
 from matplotlib import pyplot as plt
 

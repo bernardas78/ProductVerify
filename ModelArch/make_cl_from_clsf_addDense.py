@@ -3,9 +3,9 @@
 
 from tensorflow.keras.layers import Input, Dense
 from tensorflow import keras
-from CenterLoss.centerLossLayer_Eucl import CenterLossLayer
+from CenterLoss.centerLossLayer import CenterLossLayer
 
-def make_model_cl (model_clsf, dense_size=64):
+def make_model_cl (model_clsf, dense_size, distName):
 
     Softmax_size = model_clsf.output_shape[1]
     #print ("Softmax_size: {}".format(Softmax_size))
@@ -25,7 +25,7 @@ def make_model_cl (model_clsf, dense_size=64):
     # add softmax
     out_softmax = Dense(Softmax_size, activation='softmax', name='DenseSoftmax')(x)
 
-    output_centerLoss = CenterLossLayer(Softmax_size=Softmax_size, PreLastDense_size=PreLastDense_size, alpha=0.5, name='centerlosslayer')([x,labels_input])
+    output_centerLoss = CenterLossLayer(distName)(Softmax_size=Softmax_size, PreLastDense_size=PreLastDense_size, alpha=0.5, name='centerlosslayer')([x,labels_input])
 
     model_cl = keras.Model(inputs=[model_clsf.inputs,labels_input], outputs=[out_softmax,output_centerLoss])
 

@@ -10,7 +10,7 @@ lst_fpr = {}
 lst_tpr = {}
 lst_thr = {}
 lst_auc = {}
-lst_cnt_neurs = [ 512, 256, 128, 64, 32, 16, 8, 4, 2]
+lst_cnt_neurs = [768] #[2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
 
 for cnt_neurs in lst_cnt_neurs:
     dists_file = os.path.join ( Glb.results_folder, "Dists", "dists_{}.csv".format(cnt_neurs) )

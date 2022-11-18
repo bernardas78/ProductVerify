@@ -1,4 +1,3 @@
-#from tensorflow.python.keras.layers import Layer
 from tensorflow.keras.layers import Layer
 from tensorflow.keras import backend as K
 
@@ -43,7 +42,7 @@ class CenterLossLayer(Layer):
         # self.add_update((self.counter, self.counter + 1), x)
 
         self.result = x[0] - K.dot(x[1], self.centers)
-        self.result = K.sum(self.result ** 2, axis=1, keepdims=True) #/ K.dot(x[1], center_counts)
+        self.result = K.sum( K.abs( self.result ) , axis=1, keepdims=True) #/ K.dot(x[1], center_counts)
         return self.result # Nx1
 
     def compute_output_shape(self, input_shape):

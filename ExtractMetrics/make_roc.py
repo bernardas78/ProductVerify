@@ -6,7 +6,7 @@ lst_fpr = {}
 lst_tpr = {}
 lst_thr = {}
 lst_auc = {}
-lst_cnt_neurs = [512, 256, 128, 64, 32, 16, 8, 4, 2]
+lst_cnt_neurs = [2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
 lst_color = cm.rainbow(np.linspace(0, 1, len(lst_cnt_neurs)))
 
 for i,cnt_neurs in enumerate(lst_cnt_neurs):

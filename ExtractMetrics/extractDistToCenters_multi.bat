@@ -1,5 +1,10 @@
 cd d:\ProductVerify\ExtractMetrics
 
+..\venv\Scripts\python extractDistToCenters_tfrecord.py 2048
+..\venv\Scripts\python extractDistToCenters_tfrecord.py 1536
+..\venv\Scripts\python extractDistToCenters_tfrecord.py 1024
+..\venv\Scripts\python extractDistToCenters_tfrecord.py 768
+..\venv\Scripts\python extractDistToCenters_tfrecord.py 512
 ..\venv\Scripts\python extractDistToCenters_tfrecord.py 256
 ..\venv\Scripts\python extractDistToCenters_tfrecord.py 128
 ..\venv\Scripts\python extractDistToCenters_tfrecord.py 64
