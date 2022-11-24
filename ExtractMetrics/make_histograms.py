@@ -4,11 +4,12 @@ import os
 import numpy as np
 from matplotlib import pyplot as plt
 
-lst_cnt_neurs = [ 1024, 768, 8, 4, 2] #[ 2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
+lst_cnt_neurs = [ 2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
+dist_name = "Manhattan"
 cnt_classes = 194
 
 def visualize_cl(prelast_size):
-    dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}.csv".format(prelast_size) )
+    dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}.csv".format(prelast_size,dist_name) )
 
     df = pd.read_csv(dists_filename, header=0)
     true_lbl = "Correct: {:.3f}+/-{:.3f}".format ( np.mean(df[df.correct==1].dist), np.std(df[df.correct==1].dist) )
@@ -29,7 +30,7 @@ def visualize_cl(prelast_size):
     plt.title("Distance from Center ~ Correctness, {} neurons in CL layer".format(prelast_size))
     plt.xlabel("Distance from Class Center")
     plt.ylabel("Count of Samples")
-    plt.savefig( os.path.join ( Glb.results_folder, 'Dists', 'dists_{}.png'.format(prelast_size)))
+    plt.savefig( os.path.join ( Glb.results_folder, 'Dists', 'dists_{}_{}.png'.format(prelast_size,dist_name)))
     plt.close()
 
 for prelast_size in lst_cnt_neurs:

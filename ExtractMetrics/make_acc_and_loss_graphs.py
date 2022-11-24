@@ -3,22 +3,24 @@ from Globals.globalvars import Glb
 import os
 from matplotlib import pyplot as plt
 import numpy as np
+from trained_model_names import lc_names
 
-#x_tick_points = np.arange(1,10)
-#lst_cnt_neurs = 2**x_tick_points
+#dist_name="Manhattan"
+dist_name="Eucl"
 
 lst_cnt_neurs = np.array([2,4,8,16,32,64,128,256,512,768,1024,1536,2048])
+#lst_cnt_neurs = np.array([256,512,768,1024,1536,2048])
 x_tick_points = np.log2(lst_cnt_neurs)
 
 lst_acc = []
 lst_softmax_loss = []
 lst_total_loss = []
 
-acc_no_cl = 0.7324108481407166 #souce: IsKnown_Results\LC\lc_clsf_from_isVisible_20220811.csv
+acc_no_cl = 0.7324108481407166 #source: IsKnown_Results\LC\lc_clsf_from_isVisible_20220811.csv
 
 # collect data from all #neurons for a single graph
 for cnt_neurs in lst_cnt_neurs:
-    lc_filename = os.path.join ( Glb.results_folder, "LC", "lc_centerloss_20221108_dense_{}.csv".format(cnt_neurs)  )
+    lc_filename = os.path.join ( Glb.results_folder, "LC", lc_names(dist_name,cnt_neurs)  )
     df_lc = pd.read_csv(lc_filename, header=0)
 
     last_row = len(df_lc)-1
@@ -35,7 +37,8 @@ plt.title ("Classifier accuracy ~ Neuron Count in CL layer")
 plt.xlabel ("Neuron Count")
 plt.ylabel ("Val. Accuracy, %")
 plt.xticks(x_tick_points,lst_cnt_neurs,rotation=90)
-plt.savefig ( os.path.join ( Glb.results_folder, "Dists", "acc.png" ) )
+plt.tight_layout()
+plt.savefig ( os.path.join ( Glb.results_folder, "Dists", "acc_{}.png".format(dist_name) ) )
 plt.close()
 
 plt.fill_between (x_tick_points, lst_softmax_loss, label="Softmax Loss")
@@ -45,5 +48,6 @@ plt.legend()
 plt.title ("Loss ~ Neuron Count in CL layer")
 plt.xlabel ("Neuron Count")
 plt.ylabel ("Val. Loss")
-plt.savefig ( os.path.join ( Glb.results_folder, "Dists", "loss.png" ) )
+plt.tight_layout()
+plt.savefig ( os.path.join ( Glb.results_folder, "Dists", "loss_{}.png".format(dist_name) ) )
 plt.close()
