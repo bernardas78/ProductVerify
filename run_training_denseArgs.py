@@ -28,20 +28,22 @@ else:
 if len(sys.argv)>4:
     distName = sys.argv[4]
 else:
-    distName = "Manhattan"
+    distName = "Eucl"
+
+if len(sys.argv)>5:
+    p_minkowski = int(sys.argv[5])
+else:
+    p_minkowski = 2
 
 print( "lst_dense_size:{}".format(lst_dense_size[0] ) )
 print( "epochs:{}".format( epochs ) )
 print( "patience:{}".format(patience ) )
 print( "distance type:{}".format(distName))
+print( "p_minkowski :{}".format(p_minkowski))
 
 for dense_size in lst_dense_size:
-    model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}_dense_{}.h5".format(date.today().strftime("%Y%m%d"), dense_size ))
-    lc_centerloss_filename = os.path.join(Glb.results_folder, "LC", "lc_centerloss_{}_dense_{}.csv".format(date.today().strftime("%Y%m%d"), dense_size ))
-
-    #os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-    #os.environ["CUDA_VISIBLE_DEVICES"]=str(gpu_id)
-
+    model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}_dense_{}_{}_{}.h5".format(date.today().strftime("%Y%m%d"), dense_size, distName, p_minkowski ))
+    lc_centerloss_filename = os.path.join(Glb.results_folder, "LC", "lc_centerloss_{}_dense_{}_{}_{}.csv".format(date.today().strftime("%Y%m%d"), dense_size, distName, p_minkowski ))
 
     data_dir = Glb.images_balanced_folder
     tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
@@ -55,5 +57,6 @@ for dense_size in lst_dense_size:
                                    tfrecord_dir=tfrecord_dir,
                                    lambda_centerloss=0.1,
                                    dense_size=dense_size,
-                                   distName=distName
+                                   distName=distName,
+                                   p_minkowski=p_minkowski
                                    )

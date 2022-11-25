@@ -12,7 +12,7 @@ def CenterLossLayer(distName):
         return CenterLossLayer_Minkowski
 
 def center_loss(distName):
-    assert (distName=="Manhattan" or distName=="Eucl")
+    assert (distName=="Manhattan" or distName=="Eucl" or distName=="Minkowski")
     if distName=="Manhattan":
         return center_loss_Manhattan
     elif distName=="Eucl":

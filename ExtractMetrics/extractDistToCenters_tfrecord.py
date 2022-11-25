@@ -18,8 +18,11 @@ cnt_classes = 194
 
 prelast_size = int(sys.argv[1]) #512
 distName = sys.argv[2] #"Eucl"
-set_name = "Val"
-#set_name = "Train10"
+p_minkowski = int(sys.argv[3]) #2
+
+#set_name = "Val"
+set_name = "Train10"
+
 #prelast_size = 512
 #distName = "Manhattan"
 
@@ -32,7 +35,25 @@ dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}.csv".f
 df = pd.DataFrame (columns = ["correct", "dist"] )
 df.to_csv(dists_filename, mode="w", header=True, index=False)
 
-def dists_to_center_abssum(centers, prelast_activations):
+def dists_to_center_minkowskisum(centers, prelast_activations, **kwargs):
+    #   centers: (194 x 128)
+    #   prelast_activations: (m x 128)
+    # Returns:
+    #   dists_sq from each centers (m x 194)
+    p = int(kwargs["p"])
+    #print ("p={}".format(p))
+
+    m = prelast_activations.shape[0]
+    cnt_classes_this = centers.shape[0]
+    dists = np.zeros( (m,cnt_classes_this), dtype='float16')
+
+    for i in range(m):
+        datapoint = prelast_activations[i,:]
+        delta_datapoint = centers - datapoint
+        dists [i,:] = np.power ( np.sum( np.power (np.abs(delta_datapoint), p), axis=1), 1/p )
+    return dists
+
+def dists_to_center_abssum(centers, prelast_activations, **kwargs):
     #   centers: (194 x 128)
     #   prelast_activations: (m x 128)
     # Returns:
@@ -48,7 +69,7 @@ def dists_to_center_abssum(centers, prelast_activations):
         dists [i,:] = np.sum(np.abs(delta_datapoint), axis=1)
     return dists
 
-def dists_to_center_sqsum(centers, prelast_activations):
+def dists_to_center_sqsum(centers, prelast_activations, **kwargs):
     #   centers: (194 x 128)
     #   prelast_activations: (m x 128)
     # Returns:
@@ -61,13 +82,15 @@ def dists_to_center_sqsum(centers, prelast_activations):
     for i in range(m):
         datapoint = prelast_activations[i,:]
         delta_datapoint = centers - datapoint
-        dists [i,:] = np.sum(delta_datapoint**2, axis=1)
+        dists [i,:] = np.sqrt ( np.sum(delta_datapoint**2, axis=1) )
     return dists
 
 if distName=="Eucl":
     dists_to_center_f = dists_to_center_sqsum
-elif distName=="Manhattan":
+elif distName == "Manhattan":
     dists_to_center_f = dists_to_center_abssum
+elif distName == "Minkowski":
+    dists_to_center_f = dists_to_center_minkowskisum
 else:
     raise Exception("Unknown distance function")
 
@@ -80,6 +103,12 @@ print ("Loaded")
 # centerloss layer
 cl_layer = model_cl.get_layer('centerlosslayer')
 print ("cl_layer: {}".format(cl_layer))
+
+# update minkowski coefficient
+if distName=="Minkowski":
+    cl_layer.p = p_minkowski
+    cl_layer.get_config()
+    print ("cl_layer.p: {}".format(cl_layer.p))
 
 #prelast layer function
 for layer_before_centerloss in cl_layer._inbound_nodes[0].inbound_layers:
@@ -108,7 +137,7 @@ for batch_id in range(my_iterator.len()):
     # calc dist to center
     prelast_output = func_prelast(x_y)[0]
     assert (prelast_output.shape[1:2] == (prelast_size,))
-    dists_to_centers_batch = dists_to_center_f (centers = centers, prelast_activations=prelast_output)
+    dists_to_centers_batch = dists_to_center_f (centers = centers, prelast_activations=prelast_output, p=p_minkowski)
     assert (dists_to_centers_batch.shape[1:2] == (cnt_classes,))
 
     # output 2 1D arrays to file: correct;dist
@@ -124,13 +153,17 @@ print ("Sanity check: dists calculated using [prelast_output-centers] vs. center
 _, cl = model_cl.predict(x_y)
 y = x_y[1]
 for i in range( y.shape[0] ):
+#for i in range(1):
     Y = np.argmax(y[i])
     dist_center = prelast_output[i] - centers[Y]
+    #print("dist_center:{}".format(dist_center))
 
     if distName=="Eucl":
-        dist_center_total = np.sum(dist_center**2)
+        dist_center_total = np.sqrt ( np.sum(dist_center**2) )
     elif distName=="Manhattan":
         dist_center_total = np.sum ( np.abs(dist_center) )
+    elif distName == "Minkowski":
+        dist_center_total = np.power(np.sum(np.power(np.abs(dist_center),p_minkowski)),1/p_minkowski)
     else:
         raise Exception("Unknown dist name")
 

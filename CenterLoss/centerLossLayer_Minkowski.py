@@ -3,12 +3,13 @@ from tensorflow.keras import backend as K
 
 class CenterLossLayer(Layer):
 
-    def __init__(self, Softmax_size=194, PreLastDense_size=128, alpha=0.5, p=1, **kwargs):
+    def __init__(self, Softmax_size, PreLastDense_size, alpha, p, **kwargs):
         super().__init__(**kwargs)
         self.alpha = alpha
         self.Softmax_size = Softmax_size
         self.PreLastDense_size = PreLastDense_size
         self.p = p  #Minkowski coefficient
+        print ("p:{}".format(p))
 
     def get_config(self):
         config = super().get_config().copy()
@@ -16,6 +17,7 @@ class CenterLossLayer(Layer):
             'alpha': self.alpha,
             'Softmax_size': self.Softmax_size,
             'PreLastDense_size': self.PreLastDense_size,
+            'p': self.p
         })
         return config
 

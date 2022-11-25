@@ -43,7 +43,7 @@ class CenterLossLayer(Layer):
         # self.add_update((self.counter, self.counter + 1), x)
 
         self.result = x[0] - K.dot(x[1], self.centers)
-        self.result = K.sum(self.result ** 2, axis=1, keepdims=True) #/ K.dot(x[1], center_counts)
+        self.result = K.sqrt ( K.sum(self.result ** 2, axis=1, keepdims=True) )#/ K.dot(x[1], center_counts)
         return self.result # Nx1
 
     def compute_output_shape(self, input_shape):

@@ -31,9 +31,14 @@ x_names_Manhattan = {
     2048: "_centerloss_20221118_dense_2048_Manhattan."
 }
 
+x_names_Minkowski = {
+    2: "_centerloss_20221108_dense_2.",
+    #2: "_centerloss_20221123_dense_2_Manhattan.",
+}
 x_names = {
     "Eucl": x_names_Eucl,
-    "Manhattan": x_names_Manhattan
+    "Manhattan": x_names_Manhattan,
+    "Minkowski": x_names_Minkowski
 }
 
 def model_names (dist_name, prelast_size):
