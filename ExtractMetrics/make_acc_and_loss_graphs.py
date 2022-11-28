@@ -6,7 +6,11 @@ import numpy as np
 from trained_model_names import lc_names
 
 #dist_name="Manhattan"
-dist_name="Eucl"
+#ist_name="Eucl"
+dist_name="Minkowski"
+
+#p_minkowski=3
+p_minkowski=4
 
 lst_cnt_neurs = np.array([2,4,8,16,32,64,128,256,512,768,1024,1536,2048])
 #lst_cnt_neurs = np.array([256,512,768,1024,1536,2048])
@@ -20,7 +24,7 @@ acc_no_cl = 0.7324108481407166 #source: IsKnown_Results\LC\lc_clsf_from_isVisibl
 
 # collect data from all #neurons for a single graph
 for cnt_neurs in lst_cnt_neurs:
-    lc_filename = os.path.join ( Glb.results_folder, "LC", lc_names(dist_name,cnt_neurs)  )
+    lc_filename = os.path.join ( Glb.results_folder, "LC", lc_names(dist_name,cnt_neurs,p_minkowski)  )
     df_lc = pd.read_csv(lc_filename, header=0)
 
     last_row = len(df_lc)-1
@@ -38,7 +42,7 @@ plt.xlabel ("Neuron Count")
 plt.ylabel ("Val. Accuracy, %")
 plt.xticks(x_tick_points,lst_cnt_neurs,rotation=90)
 plt.tight_layout()
-plt.savefig ( os.path.join ( Glb.results_folder, "Dists", "acc_{}.png".format(dist_name) ) )
+plt.savefig ( os.path.join ( Glb.results_folder, "Dists", "acc_{}_{}.png".format(dist_name,p_minkowski) ) )
 plt.close()
 
 plt.fill_between (x_tick_points, lst_softmax_loss, label="Softmax Loss")
@@ -49,5 +53,5 @@ plt.title ("Loss ~ Neuron Count in CL layer")
 plt.xlabel ("Neuron Count")
 plt.ylabel ("Val. Loss")
 plt.tight_layout()
-plt.savefig ( os.path.join ( Glb.results_folder, "Dists", "loss_{}.png".format(dist_name) ) )
+plt.savefig ( os.path.join ( Glb.results_folder, "Dists", "loss_{}_{}.png".format(dist_name,p_minkowski) ) )
 plt.close()

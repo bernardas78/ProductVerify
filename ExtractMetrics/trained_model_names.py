@@ -31,18 +31,51 @@ x_names_Manhattan = {
     2048: "_centerloss_20221118_dense_2048_Manhattan."
 }
 
-x_names_Minkowski = {
-    2: "_centerloss_20221108_dense_2.",
-    #2: "_centerloss_20221123_dense_2_Manhattan.",
+x_names_Minkowski_3 = {
+    2: "_centerloss_20221125_dense_2_Minkowski_3.",
+    4: "_centerloss_20221125_dense_4_Minkowski_3.",
+    8: "_centerloss_20221125_dense_8_Minkowski_3.",
+    16: "_centerloss_20221125_dense_16_Minkowski_3.",
+    32: "_centerloss_20221125_dense_32_Minkowski_3.",
+    64: "_centerloss_20221125_dense_64_Minkowski_3.",
+    128: "_centerloss_20221125_dense_128_Minkowski_3.",
+    256: "_centerloss_20221125_dense_256_Minkowski_3.",
+    512: "_centerloss_20221125_dense_512_Minkowski_3.",
+    768: "_centerloss_20221125_dense_768_Minkowski_3.",
+    1024: "_centerloss_20221125_dense_1024_Minkowski_3.",
+    1536: "_centerloss_20221125_dense_1536_Minkowski_3.",
+    2048: "_centerloss_20221125_dense_2048_Minkowski_3.",
 }
+
+x_names_Minkowski_4 = {
+    2: "_centerloss_20221128_dense_2_Minkowski_4.",
+    4: "_centerloss_20221127_dense_4_Minkowski_4.",
+    8: "_centerloss_20221127_dense_8_Minkowski_4.",
+    16: "_centerloss_20221127_dense_16_Minkowski_4.",
+    32: "_centerloss_20221127_dense_32_Minkowski_4.",
+    64: "_centerloss_20221127_dense_64_Minkowski_4.",
+    128: "_centerloss_20221127_dense_128_Minkowski_4.",
+    256: "_centerloss_20221127_dense_256_Minkowski_4.",
+    512: "_centerloss_20221127_dense_512_Minkowski_4.",
+    768: "_centerloss_20221127_dense_768_Minkowski_4.",
+    1024: "_centerloss_20221127_dense_1024_Minkowski_4.",
+    1536: "_centerloss_20221127_dense_1536_Minkowski_4.",
+    2048: "_centerloss_20221127_dense_2048_Minkowski_4.",
+}
+
 x_names = {
     "Eucl": x_names_Eucl,
     "Manhattan": x_names_Manhattan,
-    "Minkowski": x_names_Minkowski
+    "Minkowski_3": x_names_Minkowski_3,
+    "Minkowski_4": x_names_Minkowski_4
 }
 
-def model_names (dist_name, prelast_size):
+def model_names (dist_name, prelast_size, p_minkowski):
+    if dist_name=="Minkowski":
+        dist_name = "{}_{}".format(dist_name, p_minkowski)
     return "model"+x_names[dist_name][prelast_size]+"h5"
 
-def lc_names (dist_name, prelast_size):
+def lc_names (dist_name, prelast_size, p_minkowski):
+    if dist_name=="Minkowski":
+        dist_name = "{}_{}".format(dist_name, p_minkowski)
     return "lc"+x_names[dist_name][prelast_size]+"csv"
