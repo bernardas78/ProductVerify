@@ -6,14 +6,14 @@ from matplotlib import pyplot as plt
 
 cnt_classes = 194
 
-lst_cnt_neurs = [ 2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
+lst_cnt_neurs = [16, 8, 4, 2]#[ 2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
 
 #dist_name = "Manhattan"
 #dist_name = "Eucl"
 dist_name = "Minkowski"
 
-p_minkowski = 3
-#p_minkowski = 4
+#p_minkowski = 3
+p_minkowski = 4
 
 def visualize_cl(prelast_size):
     dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}_{}.csv".format(prelast_size,dist_name,p_minkowski) )

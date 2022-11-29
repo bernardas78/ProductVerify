@@ -13,8 +13,8 @@ lst_cnt_neurs = [2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
 #dist_name = "Eucl"
 dist_name = "Minkowski"
 
-p_minkowski = 3
-#p_minkowski = 4
+#p_minkowski = 3
+p_minkowski = 4
 
 lst_color = cm.rainbow(np.linspace(0, 1, len(lst_cnt_neurs)))
 
