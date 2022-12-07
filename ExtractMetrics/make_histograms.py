@@ -6,17 +6,19 @@ from matplotlib import pyplot as plt
 
 cnt_classes = 194
 
-lst_cnt_neurs = [16, 8, 4, 2]#[ 2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
+lst_cnt_neurs = [ 2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
 
 #dist_name = "Manhattan"
-#dist_name = "Eucl"
-dist_name = "Minkowski"
+dist_name = "Eucl"
+#dist_name = "Minkowski"
 
 #p_minkowski = 3
 p_minkowski = 4
 
+mink_suffix = "_{}".format(p_minkowski) if dist_name == "Minkowski" else ""
+
 def visualize_cl(prelast_size):
-    dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}_{}.csv".format(prelast_size,dist_name,p_minkowski) )
+    dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}.csv".format(prelast_size,dist_name,mink_suffix) )
 
     df = pd.read_csv(dists_filename, header=0)
     true_lbl = "Correct: {:.3f}+/-{:.3f}".format ( np.mean(df[df.correct==1].dist), np.std(df[df.correct==1].dist) )
@@ -37,7 +39,9 @@ def visualize_cl(prelast_size):
     plt.title("Distance from Center ~ Correctness, {} neurons in CL layer".format(prelast_size))
     plt.xlabel("Distance from Class Center")
     plt.ylabel("Count of Samples")
-    plt.savefig( os.path.join ( Glb.results_folder, 'Dists', 'dists_{}_{}_{}.png'.format(prelast_size,dist_name,p_minkowski)))
+    plt.yticks([10e+6], ["10mln"],rotation=90,va='center')
+    plt.tight_layout()
+    plt.savefig( os.path.join ( Glb.results_folder, 'Dists', 'dists_{}_{}{}.png'.format(prelast_size,dist_name,mink_suffix)))
     plt.close()
 
 for prelast_size in lst_cnt_neurs:
