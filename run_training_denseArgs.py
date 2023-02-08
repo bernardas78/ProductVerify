@@ -36,7 +36,7 @@ else:
     p_minkowski = 2
 
 if len(sys.argv)>6:
-    inclInterCenter = bool(sys.argv[6])
+    inclInterCenter = sys.argv[4]=="True"
 else:
     inclInterCenter = True
 
