@@ -18,7 +18,7 @@ else:
 if len(sys.argv)>2:
     epochs = int(sys.argv[2])
 else:
-    epochs = 25
+    epochs = 100
 
 if len(sys.argv)>3:
     patience = int(sys.argv[3])
@@ -36,7 +36,7 @@ else:
     p_minkowski = 2
 
 if len(sys.argv)>6:
-    inclInterCenter = sys.argv[4]=="True"
+    inclInterCenter = sys.argv[6]=="True"
 else:
     inclInterCenter = True
 
