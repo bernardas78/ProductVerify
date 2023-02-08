@@ -7,19 +7,25 @@ from sklearn.metrics import roc_curve, roc_auc_score
 import pickle
 
 #dist_name = "Manhattan"
-dist_name = "Minkowski"
+dist_name = "Eucl"
+#dist_name = "Minkowski"
 
 #p_minkowski = 3
 p_minkowski = 4
+
+inclInterCenter = True
+
+mink_suffix = "_{}".format(p_minkowski) if dist_name == "Minkowski" else ""
 
 lst_fpr = {}
 lst_tpr = {}
 lst_thr = {}
 lst_auc = {}
-lst_cnt_neurs = [2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
+#lst_cnt_neurs = [2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
+lst_cnt_neurs = [512]
 
 for cnt_neurs in lst_cnt_neurs:
-    dists_file = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}_{}.csv".format(cnt_neurs, dist_name, p_minkowski) )
+    dists_file = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}.csv".format(cnt_neurs, dist_name, mink_suffix, inclInterCenter) )
 
     print ("Loading dists file {}...".format(dists_file))
     now=time.time()
@@ -51,7 +57,7 @@ for cnt_neurs in lst_cnt_neurs:
     lst_auc[cnt_neurs] = roc_auc_score(y_true, y_score)
     print ("Calced ROC in {} secs".format(time.time()-now))
 
-    roc_file = open(r"A:\IsKnown_Results\Dists\roc_data_{}_{}_{}.h5".format(cnt_neurs, dist_name, p_minkowski), 'wb')
+    roc_file = open(r"A:\IsKnown_Results\Dists\roc_data_{}_{}{}_{}.h5".format(cnt_neurs, dist_name, mink_suffix, inclInterCenter), 'wb')
     pickle.dump([lst_fpr[cnt_neurs], lst_tpr[cnt_neurs], lst_thr[cnt_neurs], lst_auc[cnt_neurs]],
                 roc_file)
     roc_file.close()

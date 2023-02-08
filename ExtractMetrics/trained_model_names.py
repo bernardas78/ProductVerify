@@ -15,6 +15,10 @@ x_names_Eucl = {
     2048: "_centerloss_20221108_dense_2048."
 }
 
+x_names_Eucl_inclInterCenter = {
+    512: "_centerloss_20230206_dense_512_Eucl_inclInterCenter."
+}
+
 x_names_Manhattan = {
     2: "_centerloss_20221123_dense_2_Manhattan.",
     4: "_centerloss_20221123_dense_4_Manhattan.",
@@ -65,17 +69,22 @@ x_names_Minkowski_4 = {
 
 x_names = {
     "Eucl": x_names_Eucl,
+    "Eucl_inclInterCenter": x_names_Eucl_inclInterCenter,
     "Manhattan": x_names_Manhattan,
     "Minkowski_3": x_names_Minkowski_3,
     "Minkowski_4": x_names_Minkowski_4
 }
 
-def model_names (dist_name, prelast_size, p_minkowski):
+def model_names (dist_name, prelast_size, p_minkowski, inclInterCenter):
     if dist_name=="Minkowski":
         dist_name = "{}_{}".format(dist_name, p_minkowski)
+    if inclInterCenter==True:
+        dist_name = "{}_{}".format(dist_name,"inclInterCenter")
     return "model"+x_names[dist_name][prelast_size]+"h5"
 
-def lc_names (dist_name, prelast_size, p_minkowski):
+def lc_names (dist_name, prelast_size, p_minkowski, inclInterCenter):
     if dist_name=="Minkowski":
         dist_name = "{}_{}".format(dist_name, p_minkowski)
+    if inclInterCenter==True:
+        dist_name = "{}_{}".format(dist_name,"inclInterCenter")
     return "lc"+x_names[dist_name][prelast_size]+"csv"

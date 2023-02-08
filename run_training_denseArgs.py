@@ -35,11 +35,17 @@ if len(sys.argv)>5:
 else:
     p_minkowski = 2
 
+if len(sys.argv)>6:
+    inclInterCenter = bool(sys.argv[6])
+else:
+    inclInterCenter = True
+
 print( "lst_dense_size:{}".format(lst_dense_size[0] ) )
 print( "epochs:{}".format( epochs ) )
 print( "patience:{}".format(patience ) )
 print( "distance type:{}".format(distName))
 print( "p_minkowski :{}".format(p_minkowski))
+print( "inclInterCenter :{}".format(inclInterCenter))
 
 for dense_size in lst_dense_size:
     model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}_dense_{}_{}_{}.h5".format(date.today().strftime("%Y%m%d"), dense_size, distName, p_minkowski ))
@@ -58,5 +64,6 @@ for dense_size in lst_dense_size:
                                    lambda_centerloss=0.1,
                                    dense_size=dense_size,
                                    distName=distName,
-                                   p_minkowski=p_minkowski
+                                   p_minkowski=p_minkowski,
+                                   inclInterCenter=inclInterCenter
                                    )

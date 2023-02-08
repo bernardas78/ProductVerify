@@ -6,8 +6,8 @@ import numpy as np
 from trained_model_names import lc_names
 
 #dist_name="Manhattan"
-#ist_name="Eucl"
-dist_name="Minkowski"
+dist_name="Eucl"
+#dist_name="Minkowski"
 
 #p_minkowski=3
 p_minkowski=4
@@ -28,6 +28,7 @@ for cnt_neurs in lst_cnt_neurs:
     df_lc = pd.read_csv(lc_filename, header=0)
 
     last_row = len(df_lc)-1
+    # print (df_lc.val_DenseSoftmax_accuracy[ last_row ])
     lst_acc.append( df_lc.val_DenseSoftmax_accuracy[ last_row ] )
     lst_softmax_loss.append( df_lc.val_DenseSoftmax_loss[ last_row ] )
     lst_total_loss.append ( df_lc.val_loss[ last_row ] )
@@ -55,3 +56,9 @@ plt.ylabel ("Val. Loss")
 plt.tight_layout()
 plt.savefig ( os.path.join ( Glb.results_folder, "Dists", "loss_{}_{}.png".format(dist_name,p_minkowski) ) )
 plt.close()
+
+# Print Accuracy > 8 neurons
+saturation_thr = 8
+lst_acc_filtered = [lst_acc[i] for i,cnt_neurs in enumerate(lst_cnt_neurs) if cnt_neurs>=saturation_thr]
+mean_acc, std_acc = np.mean(lst_acc_filtered), np.std(lst_acc_filtered)
+print ("Mean+-std accuracy (#neurons>={}):{}+-{}".format(saturation_thr,mean_acc, std_acc))

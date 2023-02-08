@@ -7,7 +7,8 @@ lst_fpr = {}
 lst_tpr = {}
 lst_thr = {}
 lst_auc = {}
-lst_cnt_neurs = [2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
+#lst_cnt_neurs = [2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
+lst_cnt_neurs = [512]
 
 #dist_name = "Manhattan"
 dist_name = "Eucl"
@@ -15,12 +16,15 @@ dist_name = "Eucl"
 
 p_minkowski = 3
 #p_minkowski = 4
+
+inclInterCenter = True
+
 mink_suffix = "_{}".format(p_minkowski) if dist_name == "Minkowski" else ""
 
 lst_color = cm.rainbow(np.linspace(0, 1, len(lst_cnt_neurs)))
 
 for i,cnt_neurs in enumerate(lst_cnt_neurs):
-    roc_file = open(r"A:\IsKnown_Results\Dists\roc_data_{}_{}{}.h5".format(cnt_neurs,dist_name,mink_suffix), 'rb')
+    roc_file = open(r"A:\IsKnown_Results\Dists\roc_data_{}_{}{}_{}.h5".format(cnt_neurs,dist_name,mink_suffix,inclInterCenter), 'rb')
     lst_fpr[cnt_neurs], lst_tpr[cnt_neurs], lst_thr[cnt_neurs], lst_auc[cnt_neurs] = pickle.load(roc_file)
     roc_file.close()
 
@@ -34,6 +38,15 @@ for i,cnt_neurs in enumerate(lst_cnt_neurs):
         #lw=lw,
         label="AUC({})={:.3f}".format(cnt_neurs,  lst_auc[cnt_neurs] ),
     )
+
+    #################################
+    # Equal Error rate
+    #################################
+    eer_ind = np.argmin(np.abs(lst_fpr[cnt_neurs]+lst_tpr[cnt_neurs]-1))
+    eer = (lst_fpr[cnt_neurs][eer_ind] + 1 - lst_tpr[cnt_neurs][eer_ind]) / 2.
+    print(r"	{} & {:.3f} & {:.3f} \\".format(cnt_neurs,eer,lst_auc[cnt_neurs]))
+    print("	\hline")
+
 
 plt.plot ( [0.0, 1.0], [0.0, 1.0], linestyle='dashed', lw=0.5)
 plt.text(0.4, 0.37, "Random classifier", rotation=35)
@@ -51,7 +64,7 @@ for t in lgn.get_texts():
     t.set_position((temp_shift, 0))
 
 plt.tight_layout()
-plt.savefig (r"A:\IsKnown_Results\Dists\roc_{}{}.png".format(dist_name,mink_suffix) )
+plt.savefig (r"A:\IsKnown_Results\Dists\roc_{}{}_{}.png".format(dist_name,mink_suffix,inclInterCenter) )
 plt.close()
 
 # AUC = F(#neurs)
@@ -63,5 +76,5 @@ plt.xlabel ("Number of neurons")
 plt.xticks(x_tick_points,lst_cnt_neurs,rotation=90)
 plt.title ("ROC AUC ~ neuron count in Center Loss layer")
 plt.tight_layout()
-plt.savefig (r"A:\IsKnown_Results\Dists\auc_{}{}.png".format(dist_name,mink_suffix) )
+plt.savefig (r"A:\IsKnown_Results\Dists\auc_{}{}_{}.png".format(dist_name,mink_suffix,inclInterCenter) )
 plt.close()
