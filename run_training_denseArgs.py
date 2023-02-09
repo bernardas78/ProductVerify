@@ -56,8 +56,8 @@ print( "inclInterCenter :{}".format(inclInterCenter))
 print( "lambda2 :{}".format(lambda2))
 
 for dense_size in lst_dense_size:
-    model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}_dense_{}_{}{}_{}.h5".format(date.today().strftime("%Y%m%d"), dense_size, distName, mink_suffix, inclInterCenter ))
-    lc_centerloss_filename = os.path.join(Glb.results_folder, "LC", "lc_centerloss_{}_dense_{}_{}{}_{}.csv".format(date.today().strftime("%Y%m%d"), dense_size, distName, mink_suffix, inclInterCenter ))
+    model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}_dense_{}_{}{}_{}_{:.3f}.h5".format(date.today().strftime("%Y%m%d"), dense_size, distName, mink_suffix, inclInterCenter,lambda2 ))
+    lc_centerloss_filename = os.path.join(Glb.results_folder, "LC", "lc_centerloss_{}_dense_{}_{}{}_{}_{:.3f}.csv".format(date.today().strftime("%Y%m%d"), dense_size, distName, mink_suffix, inclInterCenter,lambda2 ))
 
     data_dir = Glb.images_balanced_folder
     tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")

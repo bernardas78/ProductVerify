@@ -14,6 +14,7 @@ import os
 from ModelArch.make_cl_from_clsf_addDense import make_model_cl
 #from ModelArch.make_cl_from_clsf_removeDense_addDense import make_model_cl
 
+full_ds=True
 
 def trainModel(epochs,
                patience,
@@ -43,11 +44,12 @@ def trainModel(epochs,
     tfrecord_filepath_train = os.path.join ( tfrecord_dir, "{}.tfrecords".format("Train") )
     tfrecord_filepath_val = os.path.join ( tfrecord_dir, "{}.tfrecords".format("Val") )
 
-    train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train)
-    val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_val)
-
-    #train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
-    #val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
+    if full_ds:
+        train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train)
+        val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_val)
+    else:
+        train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
+        val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
 
     #train_iterator = MyIterator(data_dir_train)
     #val_iterator = MyIterator(data_dir_val)
