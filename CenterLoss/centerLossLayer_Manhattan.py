@@ -3,7 +3,7 @@ from tensorflow.keras import backend as K
 
 class CenterLossLayer(Layer):
 
-    def __init__(self, Softmax_size=194, PreLastDense_size=128, alpha=0.5, p=0, **kwargs):
+    def __init__(self, Softmax_size=194, PreLastDense_size=128, alpha=0.5, p=0, lambda2=1.,  **kwargs):
         super().__init__(**kwargs)
         self.alpha = alpha
         self.Softmax_size = Softmax_size

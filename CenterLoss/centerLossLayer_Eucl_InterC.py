@@ -4,11 +4,12 @@ from tensorflow.keras import backend as K
 
 class CenterLossLayer(Layer):
 
-    def __init__(self, Softmax_size=194, PreLastDense_size=128, alpha=0.5, p=0, **kwargs):
+    def __init__(self, Softmax_size=194, PreLastDense_size=128, alpha=0.5, p=0, lambda2=1., **kwargs):
         super().__init__(**kwargs)
         self.alpha = alpha
         self.Softmax_size = Softmax_size
         self.PreLastDense_size = PreLastDense_size
+        self.lambda2 = lambda2
 
     def get_config(self):
         config = super().get_config().copy()
@@ -16,6 +17,7 @@ class CenterLossLayer(Layer):
             'alpha': self.alpha,
             'Softmax_size': self.Softmax_size,
             'PreLastDense_size': self.PreLastDense_size,
+            'lambda2': self.lambda2,
         })
         return config
 
@@ -46,9 +48,8 @@ class CenterLossLayer(Layer):
         self.result = K.sqrt ( K.sum(self.result ** 2, axis=1, keepdims=True) )#/ K.dot(x[1], center_counts)
 
         interc_loss = interc_dist_mean(self.centers)
-        lambda2 = 1
 
-        return self.result + lambda2 * interc_loss # Nx1
+        return self.result + self.lambda2 * interc_loss # Nx1
 
     def compute_output_shape(self, input_shape):
         return K.int_shape(self.result)

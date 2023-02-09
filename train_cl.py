@@ -26,7 +26,8 @@ def trainModel(epochs,
                dense_size,
                distName,
                p_minkowski,
-               inclInterCenter):
+               inclInterCenter,
+               lambda2):
 
     crop_range = 1  # number of pixels to crop image (if size is 235, crops are 0-223, 1-224, ... 11-234)
     batch_size = 32
@@ -69,7 +70,7 @@ def trainModel(epochs,
     model_clsf = load_model(model_clsf_filename)
 
     #model_cl = make_model_cl(model_clsf)
-    model_cl = make_model_cl(model_clsf=model_clsf,dense_size=dense_size, distName=distName, p_minkowski=p_minkowski, inclInterCenter=inclInterCenter)
+    model_cl = make_model_cl(model_clsf=model_clsf,dense_size=dense_size, distName=distName, p_minkowski=p_minkowski, inclInterCenter=inclInterCenter, lambda2=lambda2)
 
     model_cl.compile(loss=[losses.categorical_crossentropy, center_loss(distName)],
                   optimizer=Adam(learning_rate=0.001), # default LR: 0.001

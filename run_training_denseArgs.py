@@ -40,16 +40,24 @@ if len(sys.argv)>6:
 else:
     inclInterCenter = True
 
+if len(sys.argv)>7:
+    lambda2 = float(sys.argv[7])
+else:
+    lambda2 = 1.
+
+mink_suffix = "_{}".format(p_minkowski) if distName == "Minkowski" else ""
+
 print( "lst_dense_size:{}".format(lst_dense_size[0] ) )
 print( "epochs:{}".format( epochs ) )
 print( "patience:{}".format(patience ) )
 print( "distance type:{}".format(distName))
 print( "p_minkowski :{}".format(p_minkowski))
 print( "inclInterCenter :{}".format(inclInterCenter))
+print( "lambda2 :{}".format(lambda2))
 
 for dense_size in lst_dense_size:
-    model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}_dense_{}_{}_{}.h5".format(date.today().strftime("%Y%m%d"), dense_size, distName, p_minkowski ))
-    lc_centerloss_filename = os.path.join(Glb.results_folder, "LC", "lc_centerloss_{}_dense_{}_{}_{}.csv".format(date.today().strftime("%Y%m%d"), dense_size, distName, p_minkowski ))
+    model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}_dense_{}_{}{}_{}.h5".format(date.today().strftime("%Y%m%d"), dense_size, distName, mink_suffix, inclInterCenter ))
+    lc_centerloss_filename = os.path.join(Glb.results_folder, "LC", "lc_centerloss_{}_dense_{}_{}{}_{}.csv".format(date.today().strftime("%Y%m%d"), dense_size, distName, mink_suffix, inclInterCenter ))
 
     data_dir = Glb.images_balanced_folder
     tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
@@ -65,5 +73,6 @@ for dense_size in lst_dense_size:
                                    dense_size=dense_size,
                                    distName=distName,
                                    p_minkowski=p_minkowski,
-                                   inclInterCenter=inclInterCenter
+                                   inclInterCenter=inclInterCenter,
+                                   lambda2=lambda2
                                    )
