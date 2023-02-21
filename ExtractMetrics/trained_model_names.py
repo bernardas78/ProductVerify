@@ -16,7 +16,7 @@ x_names_Eucl = {
 }
 
 x_names_Eucl_inclInterCenter = {
-    512: "_centerloss_20230208_dense_512_Eucl_True."
+    512: "_centerloss_20230209_dense_512_Eucl_True_1.000."
 }
 
 x_names_Manhattan = {

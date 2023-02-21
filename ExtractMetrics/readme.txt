@@ -6,17 +6,17 @@ run_training_denseArgs.py
 
 extractDistToCenters_multi.bat:
     In: model
-    Out: dists_{prelast_size}_{dist_name}_{p_minkowski}_{inclInterCenter}.csv       (in IsKnown_Results\Dists)
+    Out: dists_{prelast_size}_{dist_name}_{p_minkowski}_{inclInterCenter}_{lambda2}.csv       (in IsKnown_Results\Dists)
 
 from_dists_to_roc.py
-    In: dists_{}_{}_{}_{}.py
-    Out: roc_data_{}_{}_{}_{}.h5     (in IsKnown_Results\Dists)
+    In: dists_{}_{}_{}_{}_{}.py
+    Out: roc_data_{}_{}_{}_{}_{}.h5     (in IsKnown_Results\Dists)
 
 ------------MAKE GRAPHS
 
 make_roc.py
-    In: roc_data_{prelast_size}_{dist_name}_{p_minkowski}_{inclInterCenter}.h5
-    Out: roc_{dist_name}_{p_minkowski}_{inclInterCenter}.png
+    In: roc_data_{prelast_size}_{dist_name}_{p_minkowski}_{inclInterCenter}_{lambda2}.h5
+    Out: roc_{dist_name}_{p_minkowski}_{inclInterCenter}_{lambda2}.png
 
 make_histograms.py
     In: dists_{prelast_size}_{dist_name}_{p_minkowski}.csv

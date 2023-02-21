@@ -19,12 +19,15 @@ p_minkowski = 3
 
 inclInterCenter = True
 
+lambda2 = 1.0
+
 mink_suffix = "_{}".format(p_minkowski) if dist_name == "Minkowski" else ""
+interc_suffix = "_{:.3f}".format(lambda2) if inclInterCenter else ""
 
 lst_color = cm.rainbow(np.linspace(0, 1, len(lst_cnt_neurs)))
 
 for i,cnt_neurs in enumerate(lst_cnt_neurs):
-    roc_file = open(r"A:\IsKnown_Results\Dists\roc_data_{}_{}{}_{}.h5".format(cnt_neurs,dist_name,mink_suffix,inclInterCenter), 'rb')
+    roc_file = open(r"A:\IsKnown_Results\Dists\roc_data_{}_{}{}_{}{}.h5".format(cnt_neurs,dist_name,mink_suffix,inclInterCenter,interc_suffix), 'rb')
     lst_fpr[cnt_neurs], lst_tpr[cnt_neurs], lst_thr[cnt_neurs], lst_auc[cnt_neurs] = pickle.load(roc_file)
     roc_file.close()
 
@@ -64,7 +67,7 @@ for t in lgn.get_texts():
     t.set_position((temp_shift, 0))
 
 plt.tight_layout()
-plt.savefig (r"A:\IsKnown_Results\Dists\roc_{}{}_{}.png".format(dist_name,mink_suffix,inclInterCenter) )
+plt.savefig (r"A:\IsKnown_Results\Dists\roc_{}{}_{}{}.png".format(dist_name,mink_suffix,inclInterCenter,interc_suffix) )
 plt.close()
 
 # AUC = F(#neurs)
@@ -76,5 +79,5 @@ plt.xlabel ("Number of neurons")
 plt.xticks(x_tick_points,lst_cnt_neurs,rotation=90)
 plt.title ("ROC AUC ~ neuron count in Center Loss layer")
 plt.tight_layout()
-plt.savefig (r"A:\IsKnown_Results\Dists\auc_{}{}_{}.png".format(dist_name,mink_suffix,inclInterCenter) )
+plt.savefig (r"A:\IsKnown_Results\Dists\auc_{}{}_{}{}.png".format(dist_name,mink_suffix,inclInterCenter,interc_suffix) )
 plt.close()

@@ -14,9 +14,8 @@ import os
 from ModelArch.make_cl_from_clsf_addDense import make_model_cl
 #from ModelArch.make_cl_from_clsf_removeDense_addDense import make_model_cl
 
-full_ds=True
-
-def trainModel(epochs,
+def trainModel(full_ds,
+               epochs,
                patience,
                model_clsf_filename,
                model_centerloss_filename,

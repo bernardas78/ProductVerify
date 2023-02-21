@@ -112,6 +112,9 @@ if distName=="Minkowski":
     cl_layer.get_config()
     print ("cl_layer.p: {}".format(cl_layer.p))
 
+if inclInterCenter:
+    print("Lambda2:{}".format(cl_layer.lambda2))
+
 #prelast layer function
 for layer_before_centerloss in cl_layer._inbound_nodes[0].inbound_layers:
     if (type(layer_before_centerloss).__name__ != 'InputLayer'):

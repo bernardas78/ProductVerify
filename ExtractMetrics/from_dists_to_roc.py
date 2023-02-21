@@ -14,8 +14,10 @@ dist_name = "Eucl"
 p_minkowski = 4
 
 inclInterCenter = True
+lambda2 = 1.0
 
 mink_suffix = "_{}".format(p_minkowski) if dist_name == "Minkowski" else ""
+interc_suffix = "_{:.3f}".format(lambda2) if inclInterCenter else ""
 
 lst_fpr = {}
 lst_tpr = {}
@@ -25,7 +27,7 @@ lst_auc = {}
 lst_cnt_neurs = [512]
 
 for cnt_neurs in lst_cnt_neurs:
-    dists_file = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}.csv".format(cnt_neurs, dist_name, mink_suffix, inclInterCenter) )
+    dists_file = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}{}.csv".format(cnt_neurs, dist_name, mink_suffix, inclInterCenter, interc_suffix) )
 
     print ("Loading dists file {}...".format(dists_file))
     now=time.time()
@@ -57,7 +59,7 @@ for cnt_neurs in lst_cnt_neurs:
     lst_auc[cnt_neurs] = roc_auc_score(y_true, y_score)
     print ("Calced ROC in {} secs".format(time.time()-now))
 
-    roc_file = open(r"A:\IsKnown_Results\Dists\roc_data_{}_{}{}_{}.h5".format(cnt_neurs, dist_name, mink_suffix, inclInterCenter), 'wb')
+    roc_file = open(r"A:\IsKnown_Results\Dists\roc_data_{}_{}{}_{}{}.h5".format(cnt_neurs, dist_name, mink_suffix, inclInterCenter, interc_suffix), 'wb')
     pickle.dump([lst_fpr[cnt_neurs], lst_tpr[cnt_neurs], lst_thr[cnt_neurs], lst_auc[cnt_neurs]],
                 roc_file)
     roc_file.close()

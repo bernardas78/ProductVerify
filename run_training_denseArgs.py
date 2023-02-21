@@ -18,12 +18,12 @@ else:
 if len(sys.argv)>2:
     epochs = int(sys.argv[2])
 else:
-    epochs = 100
+    epochs = 25
 
 if len(sys.argv)>3:
     patience = int(sys.argv[3])
 else:
-    patience = 5
+    patience = 10
 
 if len(sys.argv)>4:
     distName = sys.argv[4]
@@ -38,12 +38,12 @@ else:
 if len(sys.argv)>6:
     inclInterCenter = sys.argv[6]=="True"
 else:
-    inclInterCenter = True
+    inclInterCenter = False
 
 if len(sys.argv)>7:
     lambda2 = float(sys.argv[7])
 else:
-    lambda2 = 1.
+    lambda2 = 0.1
 
 mink_suffix = "_{}".format(p_minkowski) if distName == "Minkowski" else ""
 
@@ -62,7 +62,8 @@ for dense_size in lst_dense_size:
     data_dir = Glb.images_balanced_folder
     tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
 
-    model_cl = train_cl.trainModel(epochs=epochs,
+    model_cl = train_cl.trainModel(full_ds=True,
+                                   epochs=epochs,
                                    patience=patience,
                                    model_clsf_filename=model_clsf_filename,
                                    model_centerloss_filename=model_centerloss_filename,

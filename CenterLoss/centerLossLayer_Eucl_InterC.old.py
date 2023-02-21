@@ -1,3 +1,4 @@
+#from tensorflow.python.keras.layers import Layer
 from tensorflow.keras.layers import Layer
 from tensorflow.keras import backend as K
 
@@ -8,6 +9,7 @@ class CenterLossLayer(Layer):
         self.alpha = alpha
         self.Softmax_size = Softmax_size
         self.PreLastDense_size = PreLastDense_size
+        self.lambda2 = lambda2
 
     def get_config(self):
         config = super().get_config().copy()
@@ -15,6 +17,7 @@ class CenterLossLayer(Layer):
             'alpha': self.alpha,
             'Softmax_size': self.Softmax_size,
             'PreLastDense_size': self.PreLastDense_size,
+            'lambda2': self.lambda2,
         })
         return config
 
@@ -31,7 +34,7 @@ class CenterLossLayer(Layer):
 
     def call(self, x, mask=None):
 
-        # x[0] is Nx2, x[1] is Nx10 onehot, self.centers is 10x2
+        # x[0] is mx2, x[1] is mx10 onehot, self.centers is 10x2
         delta_centers = K.dot(K.transpose(x[1]), (K.dot(x[1], self.centers) - x[0]))  # 10x2
         center_counts = K.sum(K.transpose(x[1]), axis=1, keepdims=True) + 1  # 10x1
         delta_centers /= center_counts
@@ -43,10 +46,35 @@ class CenterLossLayer(Layer):
 
         self.result = x[0] - K.dot(x[1], self.centers)
         self.result = K.sqrt ( K.sum(self.result ** 2, axis=1, keepdims=True) )#/ K.dot(x[1], center_counts)
-        return self.result # Nx1
+
+        interc_loss = interc_dist_mean(self.centers)
+
+        return self.result + self.lambda2 * interc_loss # Nx1
 
     def compute_output_shape(self, input_shape):
         return K.int_shape(self.result)
 
 def center_loss(y_true, y_pred):
     return 0.5 * K.sum(y_pred, axis=0)
+
+def interc_dist_mean (c):
+    # c is [Softmax_size * PreLastDense_size]
+    c_shape = K.int_shape(c)
+
+    # dot(v1,v2) - vector similarity (~cosine sim, not normalized)
+    c_dot = K.dot (c, K.transpose(c) ) # c_dot is [Softmax_size * Softmax_size]
+
+    # length of centers
+    c_len = K.sqrt ( K.sum ( c * c, axis=1, keepdims=True ) ) # c_len   is [Softmax_size * 1]
+    #                                                           c_len.T is [1 * Softmax_size]
+    #                                                    ( c_len * K.transpose (c_len)) is [Softmax_size * Softmax_size]
+
+    # 1 + cosine distance; range [0;2]
+    cosine_dist = 1 - c_dot / ( c_len * K.transpose (c_len) ) # cosine_dist is [Softmax_size * Softmax_size]
+
+    # cosine_dist has zero diagonal (self-dots); total n*(n-1) non-zero members
+    #   range [0;2]
+    mean_interc_loss = 2 - K.sum(cosine_dist) / ( c_shape[0] * ( c_shape[0]-1 ) ) # mean_interc_loss is scalar
+
+    return mean_interc_loss
+
