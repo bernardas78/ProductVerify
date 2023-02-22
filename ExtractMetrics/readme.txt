@@ -4,7 +4,7 @@ run_training_denseArgs.py
     In:
     Out: model
 
-extractDistToCenters_multi.bat:
+extractDistToCenters_multi.bat: (17min)
     In: model
     Out: dists_{prelast_size}_{dist_name}_{p_minkowski}_{inclInterCenter}_{lambda2}.csv       (in IsKnown_Results\Dists)
 

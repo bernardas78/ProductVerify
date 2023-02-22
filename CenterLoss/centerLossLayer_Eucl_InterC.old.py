@@ -10,6 +10,7 @@ class CenterLossLayer(Layer):
         self.Softmax_size = Softmax_size
         self.PreLastDense_size = PreLastDense_size
         self.lambda2 = lambda2
+        print("centerLossLayer_Eucl_InterC.old.init.lambda2:{}".format(lambda2))
 
     def get_config(self):
         config = super().get_config().copy()

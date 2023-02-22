@@ -4,6 +4,7 @@ from CenterLoss.centerLossLayer_Manhattan import CenterLossLayer as CenterLossLa
 from CenterLoss.centerLossLayer_Minkowski import CenterLossLayer as CenterLossLayer_Minkowski, center_loss as center_loss_Minkowski
 
 def CenterLossLayer(distName, inclInterCenter):
+    print ("Choosing CenterLossLayer: {}, {}".format(distName, inclInterCenter))
     assert (distName=="Manhattan" or distName=="Eucl" or distName=="Minkowski")
     assert (distName=="Eucl" or inclInterCenter==False)
     if distName=="Manhattan":

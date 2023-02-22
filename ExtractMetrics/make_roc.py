@@ -19,7 +19,7 @@ p_minkowski = 3
 
 inclInterCenter = True
 
-lambda2 = 1.0
+lambda2 = 0.01
 
 mink_suffix = "_{}".format(p_minkowski) if dist_name == "Minkowski" else ""
 interc_suffix = "_{:.3f}".format(lambda2) if inclInterCenter else ""

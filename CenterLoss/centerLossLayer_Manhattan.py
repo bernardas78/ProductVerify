@@ -8,6 +8,7 @@ class CenterLossLayer(Layer):
         self.alpha = alpha
         self.Softmax_size = Softmax_size
         self.PreLastDense_size = PreLastDense_size
+        print("centerLossLayer_Manhattan.init")
 
     def get_config(self):
         config = super().get_config().copy()

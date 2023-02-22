@@ -11,6 +11,7 @@ class CenterLossLayer(Layer):
         self.Softmax_size = Softmax_size
         self.PreLastDense_size = PreLastDense_size
         self.lambda2 = lambda2
+        print("centerLossLayer_Eucl_InterC.init.lambda2:{}".format(lambda2))
 
     def get_config(self):
         config = super().get_config().copy()
@@ -49,9 +50,8 @@ class CenterLossLayer(Layer):
 
         # self.add_update((self.counter, self.counter + 1), x)
 
-        self.result = x[0] - K.dot(x[1], self.centers)
+        self.result = x[0] - K.dot(x[1], self.centers) + K.sum(ic_delta_centers)
         self.result = K.sqrt ( K.sum(self.result ** 2, axis=1, keepdims=True) )#/ K.dot(x[1], center_counts)
-
 
         return self.result
 

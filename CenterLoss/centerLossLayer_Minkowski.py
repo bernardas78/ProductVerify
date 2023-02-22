@@ -9,7 +9,7 @@ class CenterLossLayer(Layer):
         self.Softmax_size = Softmax_size
         self.PreLastDense_size = PreLastDense_size
         self.p = p  #Minkowski coefficient
-        print ("p:{}".format(p))
+        print("centerLossLayer_Minkowski.init.p:{}".format(p))
 
     def get_config(self):
         config = super().get_config().copy()

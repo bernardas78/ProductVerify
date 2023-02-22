@@ -18,7 +18,7 @@ else:
 if len(sys.argv)>2:
     epochs = int(sys.argv[2])
 else:
-    epochs = 25
+    epochs = 10
 
 if len(sys.argv)>3:
     patience = int(sys.argv[3])
@@ -38,12 +38,12 @@ else:
 if len(sys.argv)>6:
     inclInterCenter = sys.argv[6]=="True"
 else:
-    inclInterCenter = False
+    inclInterCenter = True
 
 if len(sys.argv)>7:
     lambda2 = float(sys.argv[7])
 else:
-    lambda2 = 0.1
+    lambda2 = 0.03
 
 mink_suffix = "_{}".format(p_minkowski) if distName == "Minkowski" else ""
 
