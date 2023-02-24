@@ -12,6 +12,9 @@ dist_name="Eucl"
 #p_minkowski=3
 p_minkowski=4
 
+inclInterCenter=False
+lambda2=0.0
+
 lst_cnt_neurs = np.array([2,4,8,16,32,64,128,256,512,768,1024,1536,2048])
 #lst_cnt_neurs = np.array([256,512,768,1024,1536,2048])
 x_tick_points = np.log2(lst_cnt_neurs)
@@ -24,7 +27,7 @@ acc_no_cl = 0.7324108481407166 #source: IsKnown_Results\LC\lc_clsf_from_isVisibl
 
 # collect data from all #neurons for a single graph
 for cnt_neurs in lst_cnt_neurs:
-    lc_filename = os.path.join ( Glb.results_folder, "LC", lc_names(dist_name,cnt_neurs,p_minkowski)  )
+    lc_filename = os.path.join ( Glb.results_folder, "LC", lc_names(dist_name,cnt_neurs,p_minkowski,inclInterCenter, lambda2)  )
     df_lc = pd.read_csv(lc_filename, header=0)
 
     last_row = len(df_lc)-1

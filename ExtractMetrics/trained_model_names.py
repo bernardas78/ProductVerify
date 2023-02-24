@@ -20,7 +20,12 @@ x_names_Eucl_inclInterCenter = {
     #512: "_centerloss_20230221_dense_512_Eucl_True_1.000."
     #512: "_centerloss_20230221_dense_512_Eucl_True_0.300."
     #512: "_centerloss_20230221_dense_512_Eucl_True_0.100."
-    512: "_centerloss_20230222_dense_512_Eucl_True_0.010."
+    "512_0.100": "_centerloss_20230222_dense_512_Eucl_True_0.100.",
+    "512_0.030": "_centerloss_20230222_dense_512_Eucl_True_0.030.",
+    "512_0.010": "_centerloss_20230222_dense_512_Eucl_True_0.010.",
+    "512_0.003": "_centerloss_20230222_dense_512_Eucl_True_0.003.",
+    "512_0.001": "_centerloss_20230223_dense_512_Eucl_True_0.001.",
+    "512_0.000": "_centerloss_20230223_dense_512_Eucl_True_0.000."
 }
 
 x_names_Manhattan = {
@@ -79,16 +84,20 @@ x_names = {
     "Minkowski_4": x_names_Minkowski_4
 }
 
-def model_names (dist_name, prelast_size, p_minkowski, inclInterCenter):
+def model_names (dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2):
+    key = prelast_size
     if dist_name=="Minkowski":
         dist_name = "{}_{}".format(dist_name, p_minkowski)
     if inclInterCenter==True:
         dist_name = "{}_{}".format(dist_name,"inclInterCenter")
-    return "model"+x_names[dist_name][prelast_size]+"h5"
+        key = "{}_{:.3f}".format(prelast_size,lambda2)
+    return "model"+x_names[dist_name][key]+"h5"
 
-def lc_names (dist_name, prelast_size, p_minkowski, inclInterCenter):
+def lc_names (dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2):
+    key = prelast_size
     if dist_name=="Minkowski":
         dist_name = "{}_{}".format(dist_name, p_minkowski)
     if inclInterCenter==True:
         dist_name = "{}_{}".format(dist_name,"inclInterCenter")
-    return "lc"+x_names[dist_name][prelast_size]+"csv"
+        key = "{}_{:.3f}".format(prelast_size, lambda2)
+    return "lc"+x_names[dist_name][key]+"csv"

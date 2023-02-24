@@ -14,7 +14,7 @@ dist_name = "Eucl"
 p_minkowski = 4
 
 inclInterCenter = True
-lambda2 = 0.01
+lambda2 = 0.000
 
 mink_suffix = "_{}".format(p_minkowski) if dist_name == "Minkowski" else ""
 interc_suffix = "_{:.3f}".format(lambda2) if inclInterCenter else ""

@@ -20,8 +20,8 @@ prelast_size = int(sys.argv[1]) #512
 distName = sys.argv[2] #"Eucl"
 p_minkowski = int(sys.argv[3]) #2
 inclInterCenter = sys.argv[4]=="True"
+lambda2 = float(sys.argv[5])
 
-print ("inclInterCenter:{}, sys.argv[4]:{}".format(inclInterCenter,sys.argv[4]))
 set_name = "Val"
 #set_name = "Train10"
 
@@ -29,11 +29,12 @@ set_name = "Val"
 #distName = "Manhattan"
 
 mink_suffix = "_{}".format(p_minkowski) if distName == "Minkowski" else ""
+interc_suffix = "_{:.3f}".format(lambda2) if inclInterCenter else ""
 
 tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
 tfrecord_filepath = os.path.join(tfrecord_dir, "{}.tfrecords".format(set_name))
 
-dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}.csv".format(prelast_size,distName,mink_suffix,inclInterCenter) )
+dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}{}.csv".format(prelast_size,distName,mink_suffix,inclInterCenter,interc_suffix) )
 df = pd.DataFrame (columns = ["correct", "dist"] )
 df.to_csv(dists_filename, mode="w", header=True, index=False)
 
@@ -97,7 +98,7 @@ else:
     raise Exception("Unknown distance function")
 
 # Load model
-model_cl_filename = os.path.join(Glb.results_folder, "Models", model_names(distName,prelast_size,p_minkowski,inclInterCenter) )
+model_cl_filename = os.path.join(Glb.results_folder, "Models", model_names(distName,prelast_size,p_minkowski,inclInterCenter,lambda2) )
 print ("Loading {}".format(model_cl_filename))
 model_cl = load_model(model_cl_filename, custom_objects={'CenterLossLayer': CenterLossLayer(distName,inclInterCenter), 'center_loss': center_loss(distName)})
 print ("Loaded")

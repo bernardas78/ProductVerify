@@ -16,12 +16,15 @@ dist_name = "Eucl"
 #p_minkowski = 3
 p_minkowski = 4
 
-mink_suffix = "_{}".format(p_minkowski) if dist_name == "Minkowski" else ""
-
 inclInterCenter = True
+lambda2 = 0.003
+
+mink_suffix = "_{}".format(p_minkowski) if dist_name == "Minkowski" else ""
+interc_suffix = "_{:.3f}".format(lambda2) if inclInterCenter else ""
+
 
 def visualize_cl(prelast_size):
-    dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}.csv".format(prelast_size,dist_name,mink_suffix, inclInterCenter) )
+    dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}{}.csv".format(prelast_size,dist_name,mink_suffix, inclInterCenter, interc_suffix) )
 
     df = pd.read_csv(dists_filename, header=0)
     true_lbl = "Correct: {:.3f}+/-{:.3f}".format ( np.mean(df[df.correct==1].dist), np.std(df[df.correct==1].dist) )
@@ -44,7 +47,7 @@ def visualize_cl(prelast_size):
     plt.ylabel("Count of Samples")
     plt.yticks([10e+6], ["10mln"],rotation=90,va='center')
     plt.tight_layout()
-    plt.savefig( os.path.join ( Glb.results_folder, 'Dists', 'dists_{}_{}{}_{}.png'.format(prelast_size,dist_name,mink_suffix,inclInterCenter)))
+    plt.savefig( os.path.join ( Glb.results_folder, 'Dists', 'dists_{}_{}{}_{}{}.png'.format(prelast_size,dist_name,mink_suffix,inclInterCenter, interc_suffix)))
     plt.close()
 
 for prelast_size in lst_cnt_neurs:

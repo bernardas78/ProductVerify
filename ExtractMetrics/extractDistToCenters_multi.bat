@@ -58,4 +58,9 @@ rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 1024 Minkowski 4 Fal
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 1536 Minkowski 4 False
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 2048 Minkowski 4 False
 
-..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.100
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.030
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.010
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.003
+..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.001
+..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.000
