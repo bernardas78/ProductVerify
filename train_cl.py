@@ -23,6 +23,7 @@ def trainModel(full_ds,
                data_dir,
                tfrecord_dir,
                lambda_centerloss,
+               pre_cl_layer_ind,
                dense_size,
                distName,
                p_minkowski,
@@ -71,7 +72,14 @@ def trainModel(full_ds,
     model_clsf = load_model(model_clsf_filename)
 
     #model_cl = make_model_cl(model_clsf)
-    model_cl = make_model_cl(model_clsf=model_clsf,dense_size=dense_size, distName=distName, p_minkowski=p_minkowski, inclInterCenter=inclInterCenter, lambda2=lambda2)
+    model_cl = make_model_cl(
+        model_clsf=model_clsf,
+        dense_size=dense_size,
+        distName=distName,
+        p_minkowski=p_minkowski,
+        inclInterCenter=inclInterCenter,
+        lambda2=lambda2,
+        pre_cl_layer_ind=pre_cl_layer_ind)
 
     model_cl.compile(loss=[losses.categorical_crossentropy, center_loss(distName)],
                   optimizer=Adam(learning_rate=0.001), # default LR: 0.001
