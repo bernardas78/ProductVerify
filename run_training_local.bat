@@ -13,4 +13,6 @@ rem 7: lambda_centerloss
 rem 8: pre_cl_layer_ind
 rem 9: inclInterCenter
 rem 10: lambda2
-venv\Scripts\python.exe run_training_denseArgs.py False 512 25 25 Eucl 2 0.1 -2 False 0.000
+rem venv\Scripts\python.exe run_training_denseArgs.py False 512 25 25 Eucl 2 0.1 -2 False 0.000
+
+venv\Scripts\python.exe run_training_denseArgs.py False 512 10 5 Eucl 0 0.1 -10 False 0.0

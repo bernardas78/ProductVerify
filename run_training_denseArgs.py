@@ -3,6 +3,7 @@ import os
 from datetime import date
 from Globals.globalvars import Glb
 import sys
+import random
 
 gpu_id = 0
 
@@ -72,9 +73,20 @@ print( "pre_cl_layer_ind:{}".format(pre_cl_layer_ind ) )
 print( "inclInterCenter :{}".format(inclInterCenter))
 print( "lambda2 :{}".format(lambda2))
 
+unique_num = "{:08d}".format( int(random.uniform(0,1)*1e+8) )
+print( "unique_num :{}".format(unique_num))
+
 for dense_size in lst_dense_size:
-    model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model_centerloss_{}_dense_{}_{}{}_{}_{:.3f}.h5".format(date.today().strftime("%Y%m%d"), dense_size, distName, mink_suffix, inclInterCenter,lambda2 ))
-    lc_centerloss_filename = os.path.join(Glb.results_folder, "LC", "lc_centerloss_{}_dense_{}_{}{}_{}_{:.3f}.csv".format(date.today().strftime("%Y%m%d"), dense_size, distName, mink_suffix, inclInterCenter,lambda2 ))
+    filename_suffix = "_centerloss_{}_dense_{}_{}{}_{}_{:.3f}_{}.h5".format(
+        date.today().strftime("%Y%m%d"),
+        dense_size,
+        distName,
+        mink_suffix,
+        inclInterCenter,
+        lambda2,
+        unique_num)
+    model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model{}".format(filename_suffix))
+    lc_centerloss_filename = os.path.join(Glb.results_folder, "LC", "lc{}".format(filename_suffix))
 
     data_dir = Glb.images_balanced_folder
     tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
