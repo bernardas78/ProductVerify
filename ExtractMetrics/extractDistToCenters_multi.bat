@@ -62,5 +62,23 @@ rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.10
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.030
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.010
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.003
-..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.001
-..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.000
+
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.001
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.000
+
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -10
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -9
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -8
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -7
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -6
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -5
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -4
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -3
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -2
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" 0
+
+..\venv\Scripts\python extractDistToCenters_tfrecord.py "lambda1" "0.010"
+..\venv\Scripts\python extractDistToCenters_tfrecord.py "lambda1" "0.030"
+..\venv\Scripts\python extractDistToCenters_tfrecord.py "lambda1" "0.100"
+..\venv\Scripts\python extractDistToCenters_tfrecord.py "lambda1" "0.300"
+..\venv\Scripts\python extractDistToCenters_tfrecord.py "lambda1" "1.000"

@@ -28,6 +28,27 @@ x_names_Eucl_inclInterCenter = {
     "512_0.000": "_centerloss_20230223_dense_512_Eucl_True_0.000."
 }
 
+x_names_preClIndex = {
+    "-10": "_centerloss_20230228_dense_512_Eucl_False_0.000_83026641.",
+    "-9": "_centerloss_20230227_dense_512_Eucl_False_0.000_00000000.",
+    "-8": "_centerloss_20230228_dense_512_Eucl_False_0.000_97593237.",
+    "-7": "_centerloss_20230228_dense_512_Eucl_False_0.000_25678549.",
+    "-6": "_centerloss_20230228_dense_512_Eucl_False_0.000_81255417.",
+    "-5": "_centerloss_20230228_dense_512_Eucl_False_0.000_29148623.",
+    "-4": "_centerloss_20230228_dense_512_Eucl_False_0.000_81151122.",
+    "-3": "_centerloss_20230228_dense_512_Eucl_False_0.000_92238302.",
+    "-2": "_centerloss_20230228_dense_512_Eucl_False_0.000_93153774.",
+    "0": "_centerloss_20230228_dense_512_Eucl_False_0.000_78417939."
+}
+
+x_names_lambda1 = {
+    "0.010": "_centerloss_20230302_dense_512_Eucl_False_0.000_26650262.",
+    "0.030": "_centerloss_20230302_dense_512_Eucl_False_0.000_87503798.",
+    "0.100": "_centerloss_20230302_dense_512_Eucl_False_0.000_55753578.",
+    "0.300": "_centerloss_20230302_dense_512_Eucl_False_0.000_69199258.",
+    "1.000": "_centerloss_20230302_dense_512_Eucl_False_0.000_12094252."
+}
+
 x_names_Manhattan = {
     2: "_centerloss_20221123_dense_2_Manhattan.",
     4: "_centerloss_20221123_dense_4_Manhattan.",
@@ -81,23 +102,37 @@ x_names = {
     "Eucl_inclInterCenter": x_names_Eucl_inclInterCenter,
     "Manhattan": x_names_Manhattan,
     "Minkowski_3": x_names_Minkowski_3,
-    "Minkowski_4": x_names_Minkowski_4
+    "Minkowski_4": x_names_Minkowski_4,
+    "preClIndex": x_names_preClIndex,
+    "lambda1": x_names_lambda1
 }
 
-def model_names (dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2):
-    key = prelast_size
+def dic_and_key (dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2, experName, preClIndex="n/a", lambda1="n/a"):
+    if experName == "lambda1":
+        dic = x_names["lambda1"]
+        key = lambda1
+        return (dic, key)
+    if experName == "preClIndex":
+        dic = x_names["preClIndex"]
+        key = preClIndex
+        return (dic, key)
+    if experName != "preClIndex":
+        key = prelast_size
     if dist_name=="Minkowski":
         dist_name = "{}_{}".format(dist_name, p_minkowski)
     if inclInterCenter==True:
         dist_name = "{}_{}".format(dist_name,"inclInterCenter")
         key = "{}_{:.3f}".format(prelast_size,lambda2)
-    return "model"+x_names[dist_name][key]+"h5"
+    return (x_names[dist_name], key)
 
-def lc_names (dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2):
-    key = prelast_size
-    if dist_name=="Minkowski":
-        dist_name = "{}_{}".format(dist_name, p_minkowski)
-    if inclInterCenter==True:
-        dist_name = "{}_{}".format(dist_name,"inclInterCenter")
-        key = "{}_{:.3f}".format(prelast_size, lambda2)
-    return "lc"+x_names[dist_name][key]+"csv"
+def model_names (dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2, experName, preClIndex="n/a", lambda1="n/a"):
+    dic, key = dic_and_key(dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2, experName, preClIndex, lambda1)
+    return "model"+dic[key]+"h5"
+
+def lc_names (dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2, experName, preClIndex="n/a", lambda1="n/a"):
+    dic, key = dic_and_key(dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2, experName, preClIndex, lambda1)
+    return "lc"+dic[key]+"csv"
+
+def experSuffix_names (dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2, experName, preClIndex="n/a", lambda1="n/a"):
+    dic, key = dic_and_key(dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2, experName, preClIndex, lambda1)
+    return dic[key]

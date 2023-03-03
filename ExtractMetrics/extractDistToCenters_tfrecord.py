@@ -5,7 +5,7 @@ from tensorflow.keras.models import load_model
 import os
 import pandas as pd
 import sys
-from trained_model_names import model_names
+from trained_model_names import model_names, experSuffix_names
 
 sys.path.insert(0,'..')
 
@@ -16,17 +16,31 @@ from Globals.globalvars import Glb, MyTfrecordIterator
 data_dir = Glb.images_balanced_folder
 cnt_classes = 194
 
-prelast_size = int(sys.argv[1]) #512
-distName = sys.argv[2] #"Eucl"
-p_minkowski = int(sys.argv[3]) #2
-inclInterCenter = sys.argv[4]=="True"
-lambda2 = float(sys.argv[5])
-
 set_name = "Val"
 #set_name = "Train10"
 
-#prelast_size = 512
-#distName = "Manhattan"
+experName = ""
+preClIndex = -1234
+prelast_size = -5423
+distName = "Eucl"
+p_minkowski = -1
+inclInterCenter = False
+lambda2 = -1234234.34543
+lambda1 = "n/a"
+
+if sys.argv[1] == "lambda1":
+    experName = sys.argv[1]
+    lambda1 = sys.argv[2]
+elif sys.argv[1] == "preClIndex":
+    experName = sys.argv[1]
+    preClIndex = sys.argv[2]
+else:
+    prelast_size = int(sys.argv[1]) #512
+    distName = sys.argv[2] #"Eucl"
+    p_minkowski = int(sys.argv[3]) #2
+    inclInterCenter = sys.argv[4]=="True"
+    lambda2 = float(sys.argv[5])
+
 
 mink_suffix = "_{}".format(p_minkowski) if distName == "Minkowski" else ""
 interc_suffix = "_{:.3f}".format(lambda2) if inclInterCenter else ""
@@ -34,7 +48,9 @@ interc_suffix = "_{:.3f}".format(lambda2) if inclInterCenter else ""
 tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
 tfrecord_filepath = os.path.join(tfrecord_dir, "{}.tfrecords".format(set_name))
 
-dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}{}.csv".format(prelast_size,distName,mink_suffix,inclInterCenter,interc_suffix) )
+#dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}{}.csv".format(prelast_size,distName,mink_suffix,inclInterCenter,interc_suffix) )
+experSuffix = experSuffix_names(distName,prelast_size,p_minkowski,inclInterCenter,lambda2,experName,preClIndex, lambda1)
+dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists{}csv".format(experSuffix) )
 df = pd.DataFrame (columns = ["correct", "dist"] )
 df.to_csv(dists_filename, mode="w", header=True, index=False)
 
@@ -98,7 +114,8 @@ else:
     raise Exception("Unknown distance function")
 
 # Load model
-model_cl_filename = os.path.join(Glb.results_folder, "Models", model_names(distName,prelast_size,p_minkowski,inclInterCenter,lambda2) )
+model_cl_filename = os.path.join(Glb.results_folder, "Models", "model"+experSuffix+"h5" )
+#model_cl_filename = os.path.join(Glb.results_folder, "Models", model_names(distName,prelast_size,p_minkowski,inclInterCenter,lambda2,experName,preClIndex) )
 print ("Loading {}".format(model_cl_filename))
 model_cl = load_model(model_cl_filename, custom_objects={'CenterLossLayer': CenterLossLayer(distName,inclInterCenter), 'center_loss': center_loss(distName)})
 print ("Loaded")
@@ -125,7 +142,8 @@ func_prelast = K.function( [model_cl.input], [prelast_layer.output] )
 
 # get center values
 centers = cl_layer.get_weights()[0]
-assert (centers.shape==(cnt_classes,prelast_size))
+print ("centers.shape={}".format(centers.shape))
+#assert (centers.shape==(cnt_classes,prelast_size)) # doesn't work if not pre-last layer
 
 # load data
 my_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath)
@@ -142,7 +160,7 @@ for batch_id in range(my_iterator.len()):
     assert ( x_y[1].shape[1:2] == (cnt_classes,) )
     # calc dist to center
     prelast_output = func_prelast(x_y)[0]
-    assert (prelast_output.shape[1:2] == (prelast_size,))
+    #assert (prelast_output.shape[1:2] == (prelast_size,)) # doesn't work if not pre-last layer
     dists_to_centers_batch = dists_to_center_f (centers = centers, prelast_activations=prelast_output, p=p_minkowski)
     assert (dists_to_centers_batch.shape[1:2] == (cnt_classes,))
 
