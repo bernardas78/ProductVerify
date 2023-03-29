@@ -7,12 +7,16 @@ from sklearn.metrics import roc_curve, roc_auc_score
 import pickle
 from trained_model_names import experSuffix_names
 
-experName = "preClIndex"
+#experName = "preClIndex"
 preClIndex = "-8"
 
+#experName = "lambda1"
+experName = "cosineCl"
+
 #dist_name = "Manhattan"
-dist_name = "Eucl"
+#dist_name = "Eucl"
 #dist_name = "Minkowski"
+dist_name = "Cosine"
 
 #p_minkowski = 3
 p_minkowski = 4
@@ -31,9 +35,10 @@ lst_auc = {}
 lst_cnt_neurs = [512]
 
 cnt_neurs = 512
-for preClIndex in ["-10","-9","-8","-7","-6","-5","-4","-3","-2","0"]:
+for lambda1 in [ "3.000", "9.900"]: # "0.010", "0.030", "0.100", "0.300", "1.000",
+#for preClIndex in ["-10","-9","-8","-7","-6","-5","-4","-3","-2","0"]:
 #for cnt_neurs in lst_cnt_neurs:
-    experSuffix = experSuffix_names(dist_name, cnt_neurs, p_minkowski, inclInterCenter, lambda2, experName, preClIndex)
+    experSuffix = experSuffix_names(dist_name, cnt_neurs, p_minkowski, inclInterCenter, lambda2, experName, preClIndex, lambda1)
     dists_file = os.path.join ( Glb.results_folder, "Dists", "dists{}csv".format(experSuffix) )
     #dists_file = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}{}.csv".format(cnt_neurs, dist_name, mink_suffix, inclInterCenter, interc_suffix) )
 

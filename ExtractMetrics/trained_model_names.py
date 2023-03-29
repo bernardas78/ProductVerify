@@ -46,7 +46,19 @@ x_names_lambda1 = {
     "0.030": "_centerloss_20230302_dense_512_Eucl_False_0.000_87503798.",
     "0.100": "_centerloss_20230302_dense_512_Eucl_False_0.000_55753578.",
     "0.300": "_centerloss_20230302_dense_512_Eucl_False_0.000_69199258.",
-    "1.000": "_centerloss_20230302_dense_512_Eucl_False_0.000_12094252."
+    "1.000": "_centerloss_20230302_dense_512_Eucl_False_0.000_12094252.",
+    "3.000": "_centerloss_20230303_dense_512_Eucl_False_0.000_35959236.",
+    "9.900": "_centerloss_20230303_dense_512_Eucl_False_0.000_07006813."
+}
+
+x_names_cosineCl = {
+    "0.010": "_centerloss_20230303_dense_512_Cosine_False_0.000_05432811.",
+    "0.030": "_centerloss_20230303_dense_512_Cosine_False_0.000_40964871.",
+    "0.100": "_centerloss_20230303_dense_512_Cosine_False_0.000_97927808.",
+    "0.300": "_centerloss_20230303_dense_512_Cosine_False_0.000_72884069.",
+    "1.000": "_centerloss_20230303_dense_512_Cosine_False_0.000_50533824.",
+    "3.000": "_centerloss_20230303_dense_512_Cosine_False_0.000_27903900.",
+    "9.900": "_centerloss_20230303_dense_512_Cosine_False_0.000_35371668.",
 }
 
 x_names_Manhattan = {
@@ -104,10 +116,15 @@ x_names = {
     "Minkowski_3": x_names_Minkowski_3,
     "Minkowski_4": x_names_Minkowski_4,
     "preClIndex": x_names_preClIndex,
-    "lambda1": x_names_lambda1
+    "lambda1": x_names_lambda1,
+    "cosineCl": x_names_cosineCl
 }
 
 def dic_and_key (dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2, experName, preClIndex="n/a", lambda1="n/a"):
+    if experName == "cosineCl":
+        dic = x_names["cosineCl"]
+        key = lambda1
+        return (dic, key)
     if experName == "lambda1":
         dic = x_names["lambda1"]
         key = lambda1

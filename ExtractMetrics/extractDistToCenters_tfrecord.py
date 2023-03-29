@@ -28,7 +28,7 @@ inclInterCenter = False
 lambda2 = -1234234.34543
 lambda1 = "n/a"
 
-if sys.argv[1] == "lambda1":
+if sys.argv[1] == "lambda1" or sys.argv[1] == "cosineCl":
     experName = sys.argv[1]
     lambda1 = sys.argv[2]
 elif sys.argv[1] == "preClIndex":

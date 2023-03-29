@@ -11,12 +11,17 @@ lst_auc = {}
 #lst_cnt_neurs = [2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
 lst_cnt_neurs = [512]
 
-experName= "preClIndex"
+#experName= "preClIndex"
 preClIndex = "-2"
 
+experName= "lambda1"
+#experName= "cosineCl"
+lambda1 = "1.000"
+
 #dist_name = "Manhattan"
-dist_name = "Eucl"
+#dist_name = "Eucl"
 #dist_name = "Minkowski"
+dist_name = "Cosine"
 
 p_minkowski = 3
 #p_minkowski = 4
@@ -34,7 +39,7 @@ lst_color = cm.rainbow(np.linspace(0, 1, len(lst_cnt_neurs)))
 #for i,preClIndex in enumerate(["-8","-7","-6","-5","-4","-3","-2","0"]):
 for i,cnt_neurs in enumerate(lst_cnt_neurs):
     #print ("i:{}, preClIndex:{}".format(i,preClIndex))
-    experSuffix = experSuffix_names(dist_name, cnt_neurs, p_minkowski, inclInterCenter, lambda2, experName, preClIndex)
+    experSuffix = experSuffix_names(dist_name, cnt_neurs, p_minkowski, inclInterCenter, lambda2, experName, preClIndex, lambda1)
     roc_file = open(r"A:\IsKnown_Results\Dists\roc_data{}h5".format(experSuffix), 'rb')
     print ("Loading file: {}".format(roc_file.name))
     #roc_file = open(r"A:\IsKnown_Results\Dists\roc_data_{}_{}{}_{}{}.h5".format(cnt_neurs,dist_name,mink_suffix,inclInterCenter,interc_suffix), 'rb')

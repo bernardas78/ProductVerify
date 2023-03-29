@@ -44,7 +44,7 @@ class Glb:
     elif socket.gethostname() == 'DESKTOP-5L0SIAC':
         images_folder = 'A:/IsKnown_Images'
         # images_folder = 'C:/IsKnown_Images_IsVisible'
-        images_balanced_folder = 'C:/IsKnown_Images_IsVisible'
+        images_balanced_folder = 'S:/IsKnown_Images_IsVisible'
         results_folder = 'A:/IsKnown_Results'
         graphs_folder = 'A:/IsKnown_Results/Graph'
         tensorboard_logs_folder = 'C:/IsKnown_TBLogs'
@@ -239,3 +239,58 @@ class MyTfrecordIterator:
 
                 #print ("batch_id, len(iter): {} {}".format(batch_id,self.len_iterator))
                 yield (X, y), (y, dummy)
+
+class MyPairsIterator:
+
+    def __init__(self, tfrecord_fullds_path, tfrecords_byclass_path, batch_size=32, target_size=256, cnt_classes=194):
+        self.cnt_classes = cnt_classes
+
+        # first member of the pair comes from first_ds
+        self.first_ds = tf.data.TFRecordDataset(tfrecord_fullds_path).map(parser, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+
+        self.second_dss = []
+        for tfrecord_class_file in os.listdir(tfrecords_byclass_path):
+            tfrecord_path_file = os.path.join (tfrecords_byclass_path,tfrecord_class_file)
+            self.second_dss += [ iter( tf.data.TFRecordDataset(tfrecord_path_file).map(parser, num_parallel_calls=tf.data.experimental.AUTOTUNE).repeat(None) ) ]
+
+        #self.tfrecord_path = tfrecord_path
+        self.batch_size = batch_size
+        self.target_size = target_size
+
+        self.len_iterator = 0
+        for raw_batch in self.first_ds.batch(self.batch_size):
+            self.len_iterator += 1 #raw_batch[1].shape[0]
+
+        #self.all_classes = os.listdir(self.data_folder)
+        #self.all_classes.sort()
+        #self.all_filepaths = [ os.path.join(classs,filename) for classs in self.all_classes for filename in os.listdir( os.path.join(self.data_folder,classs)) ]
+        #random.shuffle(self.all_filepaths)
+
+        #self.len_iterator = math.ceil( len ( self.all_filepaths ) / self.batch_size )
+
+
+    def len(self):
+        return self.len_iterator
+
+    def get_iterator_pair (self):
+        while True:
+            for raw_batch in self.first_ds.batch(self.batch_size):
+                minibatch_size = raw_batch[1].shape[0]
+                X1 = tf.cast(raw_batch[0], tf.float32) / 255.
+
+                # pair's second members: half same-class, half random-class
+                X2_lst = []
+                first_half_cnt, second_half_cnt = int(minibatch_size/2), minibatch_size-int(minibatch_size/2)
+                class_inds_x2 = tf.concat( [
+                    raw_batch[1][0:first_half_cnt],
+                    tf.experimental.numpy.random.randint(0,self.cnt_classes,second_half_cnt, tf.experimental.numpy.int32)
+                    #tf.range(second_half_cnt, dtype=tf.experimental.numpy.int32)
+                ], 0 )
+
+                for i in range(minibatch_size):
+                    raw_batch_2 = self.second_dss[class_inds_x2[i]].get_next()
+                    X2_lst += [ tf.cast(raw_batch_2[0], tf.float32) / 255. ]
+                X2 = tf.stack ( X2_lst )
+                y = tf.cast( raw_batch[1] != class_inds_x2, tf.float32)
+
+                yield ((X1, X2), y)
