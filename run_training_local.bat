@@ -15,4 +15,4 @@ rem 9: inclInterCenter
 rem 10: lambda2
 rem venv\Scripts\python.exe run_training_denseArgs.py False 512 25 25 Eucl 2 0.1 -2 False 0.000
 
-venv\Scripts\python.exe run_training_denseArgs.py False 512 25 25 Cosine 0 1.0 0 False 0.0
+venv\Scripts\python.exe run_training_denseArgs.py False 512 25 25 Eucl 0 1.0 0 False 0.0

@@ -15,7 +15,10 @@ def make_model_siam (model_clsf):
     #prelast_output = model_clsf.layers[-6].output
 
 
-    prelast_output = Dense(512, activation='relu', name='DenseBeforeSubtract')(prelast_output)
+    #prelast_output = Dense(512, activation='relu', name='DenseBeforeSubtract')(prelast_output)
+    prelast_output = Dense(512, name='DenseBeforeSubtract')(prelast_output)
+
+
     #prelast_output = Dense(256, activation='relu', name='DenseBeforeSubtract2')(prelast_output)
     #prelast_output = model_clsf.layers[-6].output #remove dense
     #prelast_output = Dense(512, name='Dense_post_originally_prelast')(prelast_output)  #add dense
@@ -42,9 +45,9 @@ def make_model_siam (model_clsf):
     #merge_layer = Dense(96, activation="relu", name="relu_layer")(merge_layer)
     #merge_layer = Dense(64, activation="relu", name="relu_layer1")(merge_layer)
 
-    #output_layer = Dense(1, activation="sigmoid", name="sigmoid_layer")(merge_layer)
+    output_layer = Dense(1, activation="sigmoid", name="sigmoid_layer")(merge_layer)
     #output_layer = Activation('sigmoid')(merge_layer)
-    output_layer = merge_layer
+    #output_layer = merge_layer
 
     model_siam = keras.Model(inputs=[input_1, input_2], outputs=output_layer)
 
