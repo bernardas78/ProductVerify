@@ -294,3 +294,53 @@ class MyPairsIterator:
                 y = tf.cast( raw_batch[1] != class_inds_x2, tf.float32)
 
                 yield ((X1, X2), y)
+
+
+class MyTripletIterator:
+
+    def __init__(self, tfrecord_fullds_path, tfrecords_byclass_path, batch_size=32, target_size=256, cnt_classes=194):
+        self.cnt_classes = cnt_classes
+
+        # anchor comes from first_ds (randomly sorted; sequentially accessed)
+        self.first_ds = tf.data.TFRecordDataset(tfrecord_fullds_path).map(parser, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+
+        # positive and negative members come from 2nd ds (by class)
+        self.second_dss = []
+        for tfrecord_class_file in os.listdir(tfrecords_byclass_path):
+            tfrecord_path_file = os.path.join (tfrecords_byclass_path,tfrecord_class_file)
+            self.second_dss += [ iter( tf.data.TFRecordDataset(tfrecord_path_file).map(parser, num_parallel_calls=tf.data.experimental.AUTOTUNE).repeat(None) ) ]
+
+        self.batch_size = batch_size
+        self.target_size = target_size
+
+        self.len_iterator = 0
+        for raw_batch in self.first_ds.batch(self.batch_size):
+            self.len_iterator += 1 #raw_batch[1].shape[0]
+
+    def len(self):
+        return self.len_iterator
+
+    def get_triplets_iterator (self):
+        while True:
+            for raw_batch in self.first_ds.batch(self.batch_size):
+                minibatch_size = raw_batch[1].shape[0]
+                XAnc = tf.cast(raw_batch[0], tf.float32) / 255.
+
+                XPos_lst, XNeg_lst  = [], []
+                class_pos_inds = raw_batch[1] #same classes as of anchor
+                class_neg_inds = tf.math.floormod(
+                    raw_batch[1] +
+                    tf.experimental.numpy.random.randint(1,self.cnt_classes,minibatch_size, tf.experimental.numpy.int32),
+                    self.cnt_classes )
+
+                for i in range(minibatch_size):
+                    raw_batch = self.second_dss[class_pos_inds[i]].get_next()
+                    XPos_lst += [ tf.cast(raw_batch[0], tf.float32) / 255. ]
+                    raw_batch = self.second_dss[class_neg_inds[i]].get_next()
+                    XNeg_lst += [tf.cast(raw_batch[0], tf.float32) / 255.]
+                XPos = tf.stack ( XPos_lst )
+                XNeg = tf.stack ( XNeg_lst )
+
+                dummy =tf.zeros((minibatch_size,), dtype=tf.experimental.numpy.float32)
+
+                yield ((XAnc, XPos, XNeg) , dummy)
