@@ -46,8 +46,8 @@ def trainModel(full_ds,
                   loss = tripletloss(margin=1),
                   #loss='binary_crossentropy', #losses.BinaryCrossentropy,
                   #optimizer="RMSprop",
-                  optimizer=Adam(learning_rate=0.01), # default LR: 0.001
-                  metrics=['accuracy']
+                  optimizer=Adam(learning_rate=0.01) # default LR: 0.001
+                  #metrics=['accuracy']
                      )
 
     print (model_triplet.summary())
