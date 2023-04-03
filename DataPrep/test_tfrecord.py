@@ -1,5 +1,6 @@
 import os
 from Globals.globalvars import MyTfrecordIterator, MyPairsIterator,MyTripletIterator
+from Globals.globalvars import Glb
 import random
 import time
 
@@ -7,8 +8,8 @@ import time
 #matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 
-tfrecords_byclass_path = os.path.join ( r"A:\IsKnown_Images\PV_TFRecord_ByClass\Train10" )
-tfrecord_fullds_path = os.path.join ( r"A:\IsKnown_Images\PV_TFRecord\Train10.tfrecords" )
+tfrecord_fullds_path = os.path.join(Glb.images_folder, "PV_TFRecord", "Train10.tfrecords")
+tfrecords_byclass_path = os.path.join(Glb.images_folder, "PV_TFRecord_ByClass", "Train10")
 
 train_iterator = MyTripletIterator(tfrecord_fullds_path=tfrecord_fullds_path, tfrecords_byclass_path=tfrecords_byclass_path)
 #train_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path, tfrecords_byclass_path=tfrecords_byclass_path)
@@ -22,14 +23,14 @@ for x,y in train_iterator.get_triplets_iterator():
 #for x,y in train_iterator.get_iterator_pair():
 #for x1 in train_iterator.get_iterator_xy_ydummy():
     a,p,n=x
-    dist_pos, dist_neg=y
+    #dist_pos, dist_neg=y
     print (a.shape)
     print (p.shape)
     print (n.shape)
     #print(np.argmax(y,axis=1))
     #x1,x2=x
-    print("dist_pos:{}".format(dist_pos))
-    print("dist_neg.shape:{}".format(dist_neg.shape))
+    #print("dist_pos:{}".format(dist_pos))
+    #print("dist_neg.shape:{}".format(dist_neg.shape))
 
     minibatch_size = a.shape[0]
     for i in range(a.shape[0]):
