@@ -94,7 +94,7 @@ class Glb_Iterators:
         # get a list of all files
         Glb_Iterators.all_classes = os.listdir(data_folder)
         Glb_Iterators.all_classes.sort()
-        Glb_Iterators.all_filepaths = [ os.path.join(classs,filename) for classs in Glb_Iterators.all_classes for filename in os.listdir( os.path.join(data_folder,classs)) ]
+        Glb_Iterators.all_filepaths = [ os.path.join(classs,filename) for classs in Glb_Iterators.all_classes for filename in sorted(os.listdir( os.path.join(data_folder,classs))) ]
         random.shuffle(Glb_Iterators.all_filepaths)
         #df_files = pd.DataFrame({'filepath': filepaths, 'class_code': np.repeat(class_code, len(filepaths))})
 
@@ -120,9 +120,9 @@ class Glb_Iterators:
     def get_iterator_xy_ydummy (data_folder, batch_size=32, target_size=256):
         print ("Inside get_iterator_xy_ydummy")
         # get a list of all files
-        Glb_Iterators.all_classes = os.listdir(data_folder)
+        Glb_Iterators.all_classes = sorted(os.listdir(data_folder))
         Glb_Iterators.all_classes.sort()
-        Glb_Iterators.all_filepaths = [ os.path.join(classs,filename) for classs in Glb_Iterators.all_classes for filename in os.listdir( os.path.join(data_folder,classs)) ]
+        Glb_Iterators.all_filepaths = [ os.path.join(classs,filename) for classs in Glb_Iterators.all_classes for filename in sorted(os.listdir( os.path.join(data_folder,classs))) ]
         random.shuffle(Glb_Iterators.all_filepaths)
         #df_files = pd.DataFrame({'filepath': filepaths, 'class_code': np.repeat(class_code, len(filepaths))})
 
@@ -164,9 +164,9 @@ class MyIterator:
         self.batch_size = batch_size
         self.target_size = target_size
 
-        self.all_classes = os.listdir(self.data_folder)
+        self.all_classes = sorted(os.listdir(self.data_folder))
         self.all_classes.sort()
-        self.all_filepaths = [ os.path.join(classs,filename) for classs in self.all_classes for filename in os.listdir( os.path.join(self.data_folder,classs)) ]
+        self.all_filepaths = [ os.path.join(classs,filename) for classs in self.all_classes for filename in sorted(os.listdir( os.path.join(self.data_folder,classs))) ]
         random.shuffle(self.all_filepaths)
 
         self.len_iterator = math.ceil( len ( self.all_filepaths ) / self.batch_size )
@@ -249,7 +249,7 @@ class MyPairsIterator:
         self.first_ds = tf.data.TFRecordDataset(tfrecord_fullds_path).map(parser, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
         self.second_dss = []
-        for tfrecord_class_file in os.listdir(tfrecords_byclass_path):
+        for tfrecord_class_file in sorted(os.listdir(tfrecords_byclass_path)):
             tfrecord_path_file = os.path.join (tfrecords_byclass_path,tfrecord_class_file)
             self.second_dss += [ iter( tf.data.TFRecordDataset(tfrecord_path_file).map(parser, num_parallel_calls=tf.data.experimental.AUTOTUNE).repeat(None) ) ]
 
@@ -306,7 +306,7 @@ class MyTripletIterator:
 
         # positive and negative members come from 2nd ds (by class)
         self.second_dss = []
-        for tfrecord_class_file in os.listdir(tfrecords_byclass_path):
+        for tfrecord_class_file in sorted(os.listdir(tfrecords_byclass_path)):
             tfrecord_path_file = os.path.join (tfrecords_byclass_path,tfrecord_class_file)
             self.second_dss += [ iter( tf.data.TFRecordDataset(tfrecord_path_file).map(parser, num_parallel_calls=tf.data.experimental.AUTOTUNE).repeat(None) ) ]
 
