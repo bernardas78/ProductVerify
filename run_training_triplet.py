@@ -30,7 +30,7 @@ else:
 if len(sys.argv)>5:
     distName = int(sys.argv[5])
 else:
-    distName = "Manh"
+    distName = "Cosine"
 
 print( "full_ds:{}".format( full_ds ) )
 print( "epochs:{}".format( epochs ) )
