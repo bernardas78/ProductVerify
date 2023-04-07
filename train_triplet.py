@@ -1,9 +1,9 @@
-import tensorflow as tf
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras import losses
 from tensorflow.keras.callbacks import CSVLogger, ModelCheckpoint, EarlyStopping
 from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
+from Loss.tripletloss import tripletloss
 
 import os
 
@@ -19,7 +19,8 @@ def trainModel(full_ds,
                lc_triplet_filename,
                tfrecord_fullds_dir,
                tfrecord_byclass_dir,
-               cnt_trainable):
+               cnt_trainable,
+               distName):
 
     tfrecord_fullds_path_train10 = os.path.join ( tfrecord_fullds_dir, "{}.tfrecords".format("Train10") )
     tfrecord_fullds_path_train = os.path.join ( tfrecord_fullds_dir, "{}.tfrecords".format("Train") )
@@ -41,7 +42,7 @@ def trainModel(full_ds,
     model_clsf = load_model(model_clsf_filename)
 
     model_triplet = make_model_triplet(
-        model_clsf=model_clsf, cnt_trainable=cnt_trainable)
+        model_clsf=model_clsf, cnt_trainable=cnt_trainable, distName=distName)
 
     model_triplet.compile(
                   loss = tripletloss(margin=1),
@@ -78,41 +79,3 @@ def trainModel(full_ds,
     return model_triplet
 
 
-def tripletloss(margin=1):
-    """Provides 'constrastive_loss' an enclosing scope with variable 'margin'.
-
-    Arguments:
-        margin: Integer, defines the baseline for distance for which pairs
-                should be classified as dissimilar. - (default is 1).
-
-    Returns:
-        'constrastive_loss' function with data ('margin') attached.
-    """
-
-    # Contrastive loss = mean( (1-true_value) * square(prediction) +
-    #                         true_value * square( max(margin-prediction, 0) ))
-    def contrastive_loss(y_true, y_pred):
-        """Calculates the constrastive loss.
-
-        Arguments:
-            y_true: List of labels, each label is of type float32.
-            y_pred: List of predictions of same length as of y_true,
-                    each label is of type float32.
-
-        Returns:
-            A tensor containing constrastive loss as floating point value.
-        """
-        #ap_distance = y_pred[0]
-        #an_distance = y_pred[1]
-        #print ("y_pred:{}".format(y_pred))
-        #print ("y_true:{}".format(y_true))
-
-        #ap_distance = y_pred[0]
-        #an_distance = y_pred[1]
-        #loss = ap_distance - an_distance
-
-        loss = y_pred
-        loss = tf.math.reduce_mean ( tf.maximum(loss + margin, 0.0) )
-        return loss
-
-    return contrastive_loss

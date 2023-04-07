@@ -6,7 +6,7 @@ import os
 import pandas as pd
 import sys
 from trained_siam_model_names import model_name, suffix_name
-from train_siam import theloss
+from Loss.siamloss import theloss
 
 sys.path.insert(0,'..')
 

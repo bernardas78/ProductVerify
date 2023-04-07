@@ -15,7 +15,7 @@ else:
 if len(sys.argv)>2:
     epochs = int(sys.argv[2])
 else:
-    epochs = 1
+    epochs = 5
 
 if len(sys.argv)>3:
     patience = int(sys.argv[3])
@@ -27,11 +27,16 @@ if len(sys.argv)>4:
 else:
     cnt_trainable = 4
 
+if len(sys.argv)>5:
+    distName = int(sys.argv[5])
+else:
+    distName = "Manh"
 
 print( "full_ds:{}".format( full_ds ) )
 print( "epochs:{}".format( epochs ) )
 print( "patience:{}".format(patience ) )
 print( "cnt_trainable:{}".format(cnt_trainable ) )
+print( "distName:{}".format(distName ) )
 
 unique_num = "{:08d}".format( int(random.uniform(0,1)*1e+8) )
 print( "unique_num :{}".format(unique_num))
@@ -54,5 +59,6 @@ model_triplet = train_triplet.trainModel(full_ds=full_ds,
                                  lc_triplet_filename=lc_triplet_filename,
                                  tfrecord_fullds_dir=tfrecord_fullds_dir,
                                  tfrecord_byclass_dir=tfrecord_byclass_dir,
-                                 cnt_trainable=cnt_trainable
+                                 cnt_trainable=cnt_trainable,
+                                 distName=distName
                                  )

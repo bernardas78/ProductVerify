@@ -1,24 +1,10 @@
-import tensorflow as tf
+
 from tensorflow.keras.layers import Input, Lambda, Dense, Activation, Subtract, Layer
 from tensorflow import keras
+from Layers.triplet_distanceLayer import DistanceLayer
 
-class DistanceLayer(Layer):
-    """
-    This layer is responsible for computing the distance between the anchor
-    embedding and the positive embedding, and the anchor embedding and the
-    negative embedding.
-    """
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def call(self, anchor, positive, negative):
-        ap_distance = tf.reduce_sum(tf.square(anchor - positive), -1)
-        an_distance = tf.reduce_sum(tf.square(anchor - negative), -1)
-        #return (ap_distance, an_distance)
-        return ap_distance - an_distance
-
-def make_model_triplet (model_clsf, cnt_trainable):
+def make_model_triplet (model_clsf, cnt_trainable, distName):
     # from https://keras.io/examples/vision/siamese_network/
 
     anchor_input  = Input(name="anchor",  shape=model_clsf.layers[0].input.shape[1:] )
@@ -40,11 +26,10 @@ def make_model_triplet (model_clsf, cnt_trainable):
         #print ("i={}, len={}".format(i,len(embedding_network.layers)))
         if (i+cnt_trainable) < len(embedding_network.layers):
             layer.trainable = False
-            print ("untrainable layer {}".format(layer.name))
+            #print ("untrainable layer {}".format(layer.name))
 
 
-
-    distances = DistanceLayer()(
+    distances = DistanceLayer(distName)()(
         embedding_network(anchor_input),
         embedding_network(positive_input),
         embedding_network(negative_input)

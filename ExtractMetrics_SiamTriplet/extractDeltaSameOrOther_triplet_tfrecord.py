@@ -6,8 +6,8 @@ import os
 import pandas as pd
 import sys
 from trained_triplet_model_names import model_name, suffix_name
-from ModelArch.make_triplet_from_clsf import DistanceLayer
-from train_triplet import tripletloss
+from Layers.triplet_distanceLayer import DistanceLayer
+from Loss.tripletloss import tripletloss
 
 sys.path.insert(0,'..')
 
