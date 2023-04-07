@@ -38,16 +38,16 @@ for x,y in train_iterator.get_triplets_iterator():
         axarr[0].imshow(a[i,:,:,:])
         axarr[1].imshow(p[i,:,:,:])
         axarr[2].imshow(n[i,:,:,:])
-        plt.savefig("mygraph{}.png".format(i))
+        plt.savefig("img/mygraph{}.png".format(i))
         plt.close()
 
-    #if (i%100==0):
-    #    print(i)
+    if (i%10==0):
+        print(i)
     #if i>=train_iterator.len():
     #    break
-    #if i>10:
-    #    break
-    break
+    if i>100:
+        break
+    #break
 
 #print (x1.shape)
 #print (x2.shape)

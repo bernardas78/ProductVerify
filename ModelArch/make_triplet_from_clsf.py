@@ -18,7 +18,7 @@ class DistanceLayer(Layer):
         #return (ap_distance, an_distance)
         return ap_distance - an_distance
 
-def make_model_triplet (model_clsf):
+def make_model_triplet (model_clsf, cnt_trainable):
     # from https://keras.io/examples/vision/siamese_network/
 
     anchor_input  = Input(name="anchor",  shape=model_clsf.layers[0].input.shape[1:] )
@@ -31,7 +31,18 @@ def make_model_triplet (model_clsf):
     prelast_output = model_clsf.layers[-2].output
     #prelast_output = Dense(512, name='DenseBeforeSubtract')(prelast_output)
 
-    embedding_network = keras.Model(clsf_input, prelast_output)
+    embedding_network = keras.Model(clsf_input, prelast_output, name="embeddingNet")
+
+    #cnt_trainable = 8 #dense+batchNorm+dropout+activation - 2 blocks
+    #cnt_trainable = 4 #dense+batchNorm+dropout+activation - last block
+
+    for i,layer in enumerate (embedding_network.layers):
+        #print ("i={}, len={}".format(i,len(embedding_network.layers)))
+        if (i+cnt_trainable) < len(embedding_network.layers):
+            layer.trainable = False
+            print ("untrainable layer {}".format(layer.name))
+
+
 
     distances = DistanceLayer()(
         embedding_network(anchor_input),
@@ -40,5 +51,10 @@ def make_model_triplet (model_clsf):
     )
 
     model_triplet = keras.Model(inputs=[anchor_input, positive_input, negative_input], outputs=distances)
+
+    #for layer in model_triplet.layers:
+        #print ("layer {} trainable={}".format(layer.name,layer.trainable))
+        #layer.trainable = False
+        #print ("layer {} trainable={}".format(layer.name,layer.trainable))
 
     return model_triplet
