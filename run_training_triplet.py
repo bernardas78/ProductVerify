@@ -28,7 +28,7 @@ else:
     cnt_trainable = 4
 
 if len(sys.argv)>5:
-    distName = int(sys.argv[5])
+    distName = sys.argv[5]
 else:
     distName = "Cosine"
 
