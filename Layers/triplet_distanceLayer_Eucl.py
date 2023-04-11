@@ -1,5 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Layer
+import numpy as np
 
 class DistanceLayer(Layer):
     """
@@ -17,3 +18,6 @@ class DistanceLayer(Layer):
         an_distance = tf.sqrt ( tf.reduce_sum(tf.square(anchor - negative), -1) )
         #return (ap_distance, an_distance)
         return ap_distance - an_distance
+
+def dist_func(emb_a, emb_b):
+    return np.sqrt(np.sum((emb_a - emb_b) ** 2, axis=1))

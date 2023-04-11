@@ -7,7 +7,7 @@ def euclidean_distance(vects):
     sum_square = tf.math.reduce_sum(tf.math.square(x - y), axis=1, keepdims=True)
     return tf.math.sqrt(tf.math.maximum(sum_square, tf.keras.backend.epsilon()))
 
-def make_model_siam (model_clsf):
+def make_model_siam (model_clsf, cnt_trainable, distName):
     # from https://keras.io/examples/vision/siamese_contrastive/
 
     # pre-last layer's output
@@ -26,6 +26,11 @@ def make_model_siam (model_clsf):
     clsf_input = model_clsf.layers[0].input
 
     embedding_network = keras.Model(clsf_input, prelast_output)
+
+    for i,layer in enumerate (embedding_network.layers):
+        if (i+cnt_trainable) < len(embedding_network.layers):
+            layer.trainable = False
+
 
     #for layer in embedding_network.layers:
     #    layer.trainable = False

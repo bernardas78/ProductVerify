@@ -18,7 +18,9 @@ def trainModel(full_ds,
                model_siam_filename,
                lc_siam_filename,
                tfrecord_fullds_dir,
-               tfrecord_byclass_dir):
+               tfrecord_byclass_dir,
+               cnt_trainable,
+               distName):
 
     tfrecord_fullds_path_train10 = os.path.join ( tfrecord_fullds_dir, "{}.tfrecords".format("Train10") )
     tfrecord_fullds_path_train = os.path.join ( tfrecord_fullds_dir, "{}.tfrecords".format("Train") )
@@ -41,7 +43,7 @@ def trainModel(full_ds,
 
     #model_cl = make_model_cl(model_clsf)
     model_siam = make_model_siam(
-        model_clsf=model_clsf)
+        model_clsf=model_clsf, cnt_trainable=cnt_trainable, distName=distName)
 
     model_siam.compile(
                   loss = theloss(margin=1),
