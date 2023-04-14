@@ -9,7 +9,7 @@ x_names_Eucl = {
     128: "_centerloss_20221108_dense_128.",
     256: "_centerloss_20221108_dense_256.",
     512: "_centerloss_20221108_dense_512.",
-    768: "_centerloss_20221108_dense_768.",
+    768: "_centerloss_20221108_dense_768.",     # was: roc_data_768_Eucl_False.h5
     1024: "_centerloss_20221108_dense_1024.",
     1536: "_centerloss_20221108_dense_1536.",
     2048: "_centerloss_20221108_dense_2048."

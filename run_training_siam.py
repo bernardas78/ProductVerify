@@ -30,7 +30,7 @@ else:
 if len(sys.argv)>5:
     distName = sys.argv[5]
 else:
-    distName = "Eucl"
+    distName = "Mink3"
 
 print( "full_ds:{}".format( full_ds ) )
 print( "epochs:{}".format( epochs ) )

@@ -3,9 +3,37 @@ from tensorflow.keras.layers import Input, Lambda, Dense, Activation, Subtract
 from tensorflow import keras
 
 def euclidean_distance(vects):
+    print ("euclidean_distance")
     x, y = vects
     sum_square = tf.math.reduce_sum(tf.math.square(x - y), axis=1, keepdims=True)
     return tf.math.sqrt(tf.math.maximum(sum_square, tf.keras.backend.epsilon()))
+
+def manhattan_distance(vects):
+    print ("manhattan_distance")
+    x, y = vects
+    sum_square = tf.math.reduce_sum(tf.math.abs(x - y), axis=1, keepdims=True)
+    return tf.math.maximum(sum_square, tf.keras.backend.epsilon())
+
+def mink3_distance(vects):
+    print ("mink3_distance")
+    p=3.
+    x, y = vects
+    sum_square = tf.math.reduce_sum(tf.math.pow(tf.math.abs(x - y), p), axis=1, keepdims=True)
+    return tf.math.pow(tf.math.maximum(sum_square, tf.keras.backend.epsilon()), 1/p)
+
+def mink4_distance(vects):
+    print ("mink4_distance")
+    p=4.
+    x, y = vects
+    sum_square = tf.math.reduce_sum(tf.math.pow(tf.math.abs(x - y), p), axis=1, keepdims=True)
+    return tf.math.pow(tf.math.maximum(sum_square, tf.keras.backend.epsilon()), 1/p)
+
+def cosine_distance(vects):
+    print ("cosine_distance")
+    x, y = vects
+    x_norm = tf.nn.l2_normalize(x, -1)
+    y_norm = tf.nn.l2_normalize(y, -1)
+    return 1 - tf.reduce_sum(tf.multiply(x_norm, y_norm), -1, keepdims=True)
 
 def make_model_siam (model_clsf, cnt_trainable, distName):
     # from https://keras.io/examples/vision/siamese_contrastive/
@@ -42,7 +70,19 @@ def make_model_siam (model_clsf, cnt_trainable, distName):
     tower_2 = embedding_network(input_2)
 
     #merge_layer = Subtract()([tower_1, tower_2])
-    merge_layer = Lambda(euclidean_distance, name="lambda_layer")([tower_1, tower_2])
+
+    if distName=="Eucl":
+        f_distance = euclidean_distance
+    elif distName=="Manh":
+        f_distance = manhattan_distance
+    elif distName == "Mink3":
+        f_distance = mink3_distance
+    elif distName=="Mink4":
+        f_distance = mink4_distance
+    elif distName=="Cosine":
+        f_distance = cosine_distance
+
+    merge_layer = Lambda(f_distance, name="lambda_layer")([tower_1, tower_2])
 
     merge_layer = keras.layers.BatchNormalization(name="batchnorm_layer")(merge_layer)
     #output_layer = Dense(1, activation="sigmoid", name="sigmoid_layer")(normal_layer)
