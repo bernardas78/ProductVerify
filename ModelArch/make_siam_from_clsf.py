@@ -33,7 +33,7 @@ def cosine_distance(vects):
     x, y = vects
     x_norm = tf.nn.l2_normalize(x, -1)
     y_norm = tf.nn.l2_normalize(y, -1)
-    return 1 - tf.reduce_sum(tf.multiply(x_norm, y_norm), -1, keepdims=True)
+    return - tf.reduce_sum(tf.multiply(x_norm, y_norm), -1, keepdims=True)
 
 def make_model_siam (model_clsf, cnt_trainable, distName):
     # from https://keras.io/examples/vision/siamese_contrastive/
