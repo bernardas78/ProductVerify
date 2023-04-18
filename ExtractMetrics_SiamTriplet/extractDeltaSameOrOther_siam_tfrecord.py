@@ -15,7 +15,7 @@ from Globals.globalvars import Glb, MyPairsIterator
 set_name = "Val"
 #set_name = "Train10"
 
-exper_indexes = [0,1]
+exper_indexes = [5]
 
 tfrecord_fullds_path = os.path.join(Glb.images_folder, "PV_TFRecord", "{}.tfrecords".format(set_name))
 tfrecords_byclass_path = os.path.join(Glb.images_folder, "PV_TFRecord_ByClass", set_name)

@@ -5,7 +5,13 @@ x_names_Eucl = {
     0: "_siam_20230406_41108880.",       #80.4% acc after 43 epochs,            AUC = 0.903
     #0: "_siam_20230411_04747448.",       # 100 trainable
     1: "_siam_20230411_19162702.",       # 8 trainable
-    2: "_siam_20230411_46365986."        # 4 trainable
+    2: "_siam_20230411_46365986.",        # 4 trainable
+
+    3: "_siam_20230414_23036108.",  # manhattan
+    4: "_siam_20230414_27038947.",  # euclidean
+    5: "_siam_20230414_31812931.",  # mink3
+    6: "_siam_20230414_27400197.",  # mink4
+    7: "_siam_20230415_00649365."   # cosine
 }
 
 

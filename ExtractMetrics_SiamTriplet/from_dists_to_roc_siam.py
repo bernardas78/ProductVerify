@@ -7,7 +7,7 @@ from sklearn.metrics import roc_curve, roc_auc_score
 import pickle
 from trained_siam_model_names import suffix_name
 
-exper_indexes = [0,1,2]
+exper_indexes = [0,1,2,3,4,5,6,7]
 
 
 for exper_index in exper_indexes:
