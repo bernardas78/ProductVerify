@@ -15,12 +15,13 @@ from ModelArch.make_cl_from_clsf_addDense import make_model_cl
 #from ModelArch.make_cl_from_clsf_removeDense_addDense import make_model_cl
 
 def trainModel(full_ds,
+               cnt_classes,
                epochs,
                patience,
                model_clsf_filename,
                model_centerloss_filename,
                lc_centerloss_filename,
-               data_dir,
+               #data_dir,
                tfrecord_dir,
                lambda_centerloss,
                pre_cl_layer_ind,
@@ -35,21 +36,22 @@ def trainModel(full_ds,
 
     # Manually copied to C: to speed up training
     #data_dir = os.path.join(Glb.images_folder, "Bal_v14", "Ind-{}".format(hier_lvl) )
-    data_dir_train10 = os.path.join(data_dir, "Train10")
-    data_dir_train = os.path.join(data_dir, "Train")
-    data_dir_val = os.path.join(data_dir, "Val")
-    data_dir_test = os.path.join(data_dir, "Test")
+    #data_dir_train10 = os.path.join(data_dir, "Train10")
+    #data_dir_train = os.path.join(data_dir, "Train")
+    #data_dir_val = os.path.join(data_dir, "Val")
+    #data_dir_test = os.path.join(data_dir, "Test")
 
     tfrecord_filepath_train10 = os.path.join ( tfrecord_dir, "{}.tfrecords".format("Train10") )
     tfrecord_filepath_train = os.path.join ( tfrecord_dir, "{}.tfrecords".format("Train") )
     tfrecord_filepath_val = os.path.join ( tfrecord_dir, "{}.tfrecords".format("Val") )
 
+    print ("tfrecord_dir: {}".format(tfrecord_dir))
     if full_ds:
-        train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train)
-        val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_val)
+        train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train, cnt_classes=cnt_classes)
+        val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_val, cnt_classes=cnt_classes)
     else:
-        train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
-        val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10)
+        train_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10, cnt_classes=cnt_classes)
+        val_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath_train10, cnt_classes=cnt_classes)
 
     #train_iterator = MyIterator(data_dir_train)
     #val_iterator = MyIterator(data_dir_val)
@@ -74,6 +76,7 @@ def trainModel(full_ds,
     #model_cl = make_model_cl(model_clsf)
     model_cl = make_model_cl(
         model_clsf=model_clsf,
+        Softmax_size=cnt_classes,
         dense_size=dense_size,
         distName=distName,
         p_minkowski=p_minkowski,

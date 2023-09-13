@@ -11,7 +11,9 @@ x_names_Eucl = {
     4: "_siam_20230414_27038947.",  # euclidean
     5: "_siam_20230414_31812931.",  # mink3
     6: "_siam_20230414_27400197.",  # mink4
-    7: "_siam_20230415_00649365."   # cosine
+    7: "_siam_20230415_00649365.",   # cosine
+
+    10: "_siam_20230908_86847654."  # fruits360, 8 trainable, Cosine
 }
 
 

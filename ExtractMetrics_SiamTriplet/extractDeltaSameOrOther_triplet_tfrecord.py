@@ -17,17 +17,23 @@ set_name = "Val"
 #set_name = "Train10"
 
 #distName="Eucl"
-distNames= ["Cosine"]
+distNames= ["Eucl"]
 
-exper_indexes = [8]
+exper_indexes = [10]
 #exper_indexes = [5]
 
-tfrecord_fullds_path = os.path.join(Glb.images_folder, "PV_TFRecord", "{}.tfrecords".format(set_name))
-tfrecords_byclass_path = os.path.join(Glb.images_folder, "PV_TFRecord_ByClass", set_name)
+if Glb.isFruits360:
+    tfrecord_fullds_path = os.path.join(Glb.images_folder, "PV_TFRecord_Fruits360", "{}.tfrecords".format(set_name) )
+    tfrecords_byclass_path = os.path.join ( Glb.images_folder, "PV_TFRecord_Fruits360_ByClass", set_name )
+    cnt_classes=131
+else:
+    tfrecord_fullds_path = os.path.join(Glb.images_folder, "PV_TFRecord", "{}.tfrecords".format(set_name))
+    tfrecords_byclass_path = os.path.join(Glb.images_folder, "PV_TFRecord_ByClass", set_name)
+    cnt_classes = 194
 
 for exper_index,distName in zip(exper_indexes,distNames):
     # load data
-    my_iterator = MyTripletIterator(tfrecord_fullds_path=tfrecord_fullds_path,tfrecords_byclass_path=tfrecords_byclass_path)
+    my_iterator = MyTripletIterator(tfrecord_fullds_path=tfrecord_fullds_path,tfrecords_byclass_path=tfrecords_byclass_path, cnt_classes=cnt_classes)
     data_yielder = my_iterator.get_triplets_iterator()
 
     # load model

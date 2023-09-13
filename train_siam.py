@@ -12,6 +12,7 @@ from Globals.globalvars import MyPairsIterator
 from ModelArch.make_siam_from_clsf import make_model_siam
 
 def trainModel(full_ds,
+               cnt_classes,
                epochs,
                patience,
                model_clsf_filename,
@@ -32,11 +33,12 @@ def trainModel(full_ds,
     tfrecords_byclass_path_val = os.path.join ( tfrecord_byclass_dir, "Val" )
 
     if full_ds:
-        train_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path_train, tfrecords_byclass_path=tfrecords_byclass_path_train)
-        val_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path_val, tfrecords_byclass_path=tfrecords_byclass_path_val)
+        train_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path_train, tfrecords_byclass_path=tfrecords_byclass_path_train, cnt_classes=cnt_classes)
+        #train_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path_val, tfrecords_byclass_path=tfrecords_byclass_path_val, cnt_classes=cnt_classes)
+        val_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path_val, tfrecords_byclass_path=tfrecords_byclass_path_val, cnt_classes=cnt_classes)
     else:
-        train_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path_train10, tfrecords_byclass_path=tfrecords_byclass_path_train10)
-        val_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path_train10, tfrecords_byclass_path=tfrecords_byclass_path_train10)
+        train_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path_train10, tfrecords_byclass_path=tfrecords_byclass_path_train10, cnt_classes=cnt_classes)
+        val_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path_train10, tfrecords_byclass_path=tfrecords_byclass_path_train10, cnt_classes=cnt_classes)
 
     print ("Loading clsf model")
     model_clsf = load_model(model_clsf_filename)

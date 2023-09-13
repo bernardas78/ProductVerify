@@ -30,7 +30,14 @@ def mink4_distance(vects):
 
 def cosine_distance(vects):
     print ("cosine_distance")
-    x, y = vects
+    #print("type(vects): {}".format(type(vects)))
+    #print ("len(vects): {}".format(len(vects)))
+    #print ("vects[0].shape: {}".format(vects[0].shape))
+    #print ("vects[1].shape: {}".format(vects[1].shape))
+    #x,y = vects
+    x = vects[0]
+    y = vects[1]
+    #print ("post x,y = vects")
     x_norm = tf.nn.l2_normalize(x, -1)
     y_norm = tf.nn.l2_normalize(y, -1)
     return - tf.reduce_sum(tf.multiply(x_norm, y_norm), -1, keepdims=True)
@@ -82,7 +89,8 @@ def make_model_siam (model_clsf, cnt_trainable, distName):
     elif distName=="Cosine":
         f_distance = cosine_distance
 
-    merge_layer = Lambda(f_distance, name="lambda_layer")([tower_1, tower_2])
+    #merge_layer = Lambda(f_distance, name="lambda_layer")([tower_1, tower_2])
+    merge_layer = Lambda(cosine_distance, name="lambda_layer")([tower_1, tower_2])
 
     merge_layer = keras.layers.BatchNormalization(name="batchnorm_layer")(merge_layer)
     #output_layer = Dense(1, activation="sigmoid", name="sigmoid_layer")(normal_layer)

@@ -11,13 +11,21 @@ import random
 set_name="Train"
 #set_name="Train10"
 #set_name="Val"
+#set_name="Test"
 
 batch_size=32
 div255_resnet = "div255"
 
+
 img_filepath = os.path.join( Glb.images_balanced_folder, set_name)
-#data_iterator = Glb_Iterators.get_iterator(img_filepath, div255_resnet=div255_resnet, batch_size=batch_size)
 tfrecord_path = os.path.join ( Glb.images_folder, "PV_TFRecord", "{}.tfrecords".format(set_name) )
+
+#img_filepath = os.path.join( "C:\\Retellect.Demo20230726.Balanced", set_name)
+#tfrecord_path = os.path.join ( "C:\\Retellect.Demo20230726.Balanced", "{}.tfrecords".format(set_name) )
+
+img_filepath = os.path.join( "A:/Fruits360/Balanced", set_name)
+tfrecord_path = os.path.join ( Glb.images_folder, "PV_TFRecord_Fruits360", "{}.tfrecords".format(set_name) )
+
 
 
 def _bytes_feature(value):
@@ -53,6 +61,7 @@ barcodes = os.listdir(img_filepath)
 
 now= time.time()
 
+j=0
 with tf.io.TFRecordWriter(tfrecord_path) as file_writer:
     for filename in allfiles_path:
         with open(filename, 'rb') as f:
@@ -60,6 +69,16 @@ with tf.io.TFRecordWriter(tfrecord_path) as file_writer:
             in_jpg_encoding = tf.io.read_file(filename)
 
             image_shape = tf.io.extract_jpeg_shape(in_jpg_encoding, output_type=tf.dtypes.int32, name=None)
+
+            # Fruits360 original images were 100x100x3
+            if not np.array_equal ( image_shape, [256,256,3] ):
+                #print ("resize")
+                image = tf.image.decode_jpeg(in_jpg_encoding, channels=3)
+                image = tf.cast(tf.image.resize(image, [256, 256]), tf.uint8)
+                in_jpg_encoding = tf.image.encode_jpeg( image )
+                image_shape = tf.io.extract_jpeg_shape(in_jpg_encoding, output_type=tf.dtypes.int32, name=None)
+
+            #print (image_shape)
 
             # img = Image.open(filename)
             # image_raw = img.tostring()
@@ -73,6 +92,10 @@ with tf.io.TFRecordWriter(tfrecord_path) as file_writer:
             example_serialized = example_proto.SerializeToString()
 
             file_writer.write(example_serialized)
+
+            #j+=1
+            #if j>=20:
+            #    break
 
 #print ("Time elapsed: {}sec".format(time.time()-now))
 

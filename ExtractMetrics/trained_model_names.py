@@ -109,6 +109,14 @@ x_names_Minkowski_4 = {
     2048: "_centerloss_20221127_dense_2048_Minkowski_4.",   #was: roc_data_2048_Minkowski_4_False.h5
 }
 
+x_names_retellect = {
+    0: "_centerloss_20230818_dense_512_Eucl_False_0.000_29441379."
+}
+
+x_names_fruits360 = {
+    0: "_centerloss_20230906_dense_512_Eucl_False_0.000_40164903."
+}
+
 x_names = {
     "Eucl": x_names_Eucl,
     "Eucl_inclInterCenter": x_names_Eucl_inclInterCenter,
@@ -117,10 +125,20 @@ x_names = {
     "Minkowski_4": x_names_Minkowski_4,
     "preClIndex": x_names_preClIndex,
     "lambda1": x_names_lambda1,
-    "cosineCl": x_names_cosineCl
+    "cosineCl": x_names_cosineCl,
+    "retellect": x_names_retellect,
+    "fruits360": x_names_fruits360
 }
 
 def dic_and_key (dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2, experName, preClIndex="n/a", lambda1="n/a"):
+    if experName == "fruits360":
+        dic = x_names["fruits360"]
+        key = 0
+        return (dic, key)
+    if experName == "retellect":
+        dic = x_names["retellect"]
+        key = 0
+        return (dic, key)
     if experName == "cosineCl":
         dic = x_names["cosineCl"]
         key = lambda1

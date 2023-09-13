@@ -14,8 +14,11 @@ lst_cnt_neurs = [512]
 #experName= "preClIndex"
 preClIndex = "-2"
 
-experName= "lambda1"
+#experName= "lambda1"
 #experName= "cosineCl"
+#experName= "retellect"
+experName= "fruits360"
+
 lambda1 = "1.000"
 
 #dist_name = "Manhattan"

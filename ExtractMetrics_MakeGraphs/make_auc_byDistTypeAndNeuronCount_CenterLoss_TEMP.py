@@ -7,7 +7,7 @@ from ExtractMetrics.trained_model_names import experSuffix_names
 
 plot_title = "Center Loss Verification ROC AUC ~ Neuron Count"
 legend_title = "Distance Type"
-dest_filename = "auc_byDistTypeAndNeuronCount_CenterLoss.png"
+dest_filename = "auc_byDistTypeAndNeuronCount_CenterLoss_TEMP.png"
 
 lst_fpr = {}
 lst_tpr = {}
@@ -26,12 +26,12 @@ thr_print_lines = {"Manhattan":[], "Eucl":[], "Minkowski_3":[], "Minkowski_4":[]
 
 
 
-#dist_names = ["Eucl"]
-#ps_minkowski = [0]
-#auc_print_lines = { "Eucl":[]}
-#acc_print_lines = { "Eucl":[]}
-#thr_print_lines = { "Eucl":[]}
-#lst_cnt_neurs = [768]
+dist_names = ["Eucl"]
+ps_minkowski = [0]
+auc_print_lines = { "Eucl":[]}
+acc_print_lines = { "Eucl":[]}
+thr_print_lines = { "Eucl":[]}
+lst_cnt_neurs = [768]
 
 
 
@@ -50,7 +50,7 @@ for dist_name, p_minkowski in zip(dist_names,ps_minkowski):
     for i,cnt_neurs in enumerate(lst_cnt_neurs):
         #print ("i:{}, preClIndex:{}".format(i,preClIndex))
         experSuffix = experSuffix_names(dist_name, cnt_neurs, p_minkowski, inclInterCenter, lambda2, experName="xxx")
-        roc_file = open(r"A:\IsKnown_Results\Dists\roc_data{}h5".format(experSuffix), 'rb')
+        roc_file = open(r"A:\IsKnown_Results\Dists\roc_data_768_Eucl_TEMP.h5", 'rb')
         #print ("Loading file: {}".format(roc_file.name))
         #roc_file = open(r"A:\IsKnown_Results\Dists\roc_data_{}_{}{}_{}{}.h5".format(cnt_neurs,dist_name,mink_suffix,inclInterCenter,interc_suffix), 'rb')
         lst_fpr[cnt_neurs], lst_tpr[cnt_neurs], lst_thr[cnt_neurs], lst_auc[cnt_neurs] = pickle.load(roc_file)

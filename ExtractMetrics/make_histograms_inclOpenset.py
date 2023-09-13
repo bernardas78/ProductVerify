@@ -4,7 +4,8 @@ import os
 import numpy as np
 from matplotlib import pyplot as plt
 
-cnt_classes = 194
+#cnt_classes = 194
+cnt_classes = 15
 
 #lst_cnt_neurs = [ 2048, 1536, 1024, 768, 512, 256, 128, 64, 32, 16, 8, 4, 2]
 lst_cnt_neurs = [ 512]
@@ -24,16 +25,18 @@ interc_suffix = "_{:.3f}".format(lambda2) if inclInterCenter else ""
 
 
 def visualize_cl(prelast_size):
-    dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}{}.csv".format(prelast_size,dist_name,mink_suffix, inclInterCenter, interc_suffix) )
-    #dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_centerloss_20230818_dense_512_Eucl_False_0.000_29441379.csv")
+    #dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}{}.csv".format(prelast_size,dist_name,mink_suffix, inclInterCenter, interc_suffix) )
+    dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_centerloss_20230818_dense_512_Eucl_False_0.000_29441379.csv")
 
     df = pd.read_csv(dists_filename, header=0)
     true_lbl = "Correct: {:.3f}+/-{:.3f}".format ( np.mean(df[df.correct==1].dist), np.std(df[df.correct==1].dist) )
     false_lbl = "Incorrect: {:.3f}+/-{:.3f}".format ( np.mean(df[df.correct==0].dist), np.std(df[df.correct==0].dist) )
+    unknown_lbl = "Untrained product, Top1"
     myrange = (0,np.max(df.dist))
     #plt.ticklabel_format(useOffset=False, style='plain')
     plt.hist( np.repeat(df[df.correct==1].dist, (cnt_classes-1)), bins=50, color="g", alpha=0.3, label=true_lbl,range=myrange) #repeat 193 times so that #true = #false
     plt.hist( df[df.correct==0].dist, bins=50, color="r", alpha=0.3, label=false_lbl, range=myrange)
+    plt.hist( np.repeat(df[df.correct==2].dist, (cnt_classes-1)*20), bins=50, color="b", alpha=0.3, label=unknown_lbl,range=myrange)
     lgn = plt.legend()
 
     # align legend texts right
@@ -46,11 +49,12 @@ def visualize_cl(prelast_size):
     plt.title("Distance from Center ~ Correctness, {} neurons in CL layer".format(prelast_size))
     plt.xlabel("Distance from Class Center")
     plt.ylabel("Count of Samples")
-    plt.yticks([10e+6], ["10mln"],rotation=90,va='center')
+    #plt.yticks([10e+3], ["10mln"],rotation=90,va='center')
     #plt.yticks([10e+4], ["10mln"],rotation=90,va='center')
+    plt.yticks([],[])
     plt.tight_layout()
-    plt.savefig( os.path.join ( Glb.results_folder, 'Dists', 'dists_{}_{}{}_{}{}.png'.format(prelast_size,dist_name,mink_suffix,inclInterCenter, interc_suffix)))
-    #plt.savefig(os.path.join(Glb.results_folder, 'Dists','dists_centerloss_20230818_dense_512_Eucl_False_0.000_29441379.png'))
+    #plt.savefig( os.path.join ( Glb.results_folder, 'Dists', 'dists_{}_{}{}_{}{}.png'.format(prelast_size,dist_name,mink_suffix,inclInterCenter, interc_suffix)))
+    plt.savefig(os.path.join(Glb.results_folder, 'Dists','dists_openset_centerloss_20230818_dense_512_Eucl_False_0.000_29441379.png'))
     plt.close()
 
 for prelast_size in lst_cnt_neurs:

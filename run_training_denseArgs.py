@@ -7,8 +7,22 @@ import random
 
 gpu_id = 0
 
+if Glb.isRetellect:
+    model_clsf_filename = os.path.join("a:\\RetellectModels", "model_20230721_15prekes.h5") # Ret 99+%
+    data_dir = Glb.images_balanced_folder_retellect
+    tfrecord_dir = os.path.join(data_dir, "PV_TFRecord")
+    cnt_classes = 15
+elif Glb.isFruits360:
+    model_clsf_filename = os.path.join(Glb.results_folder, "Models", "model_clsf_from_isVisible_20220811.h5") # 87% acc test
+    data_dir = Glb.images_balanced_folder
+    tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord_Fruits360")
+    cnt_classes = 131
+else:
+    model_clsf_filename = os.path.join(Glb.results_folder, "Models", "model_clsf_from_isVisible_20220811.h5") # 87% acc test
+    data_dir = Glb.images_balanced_folder
+    tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
+    cnt_classes = 194
 
-model_clsf_filename = os.path.join(Glb.results_folder, "Models", "model_clsf_from_isVisible_20220811.h5") # 87% acc test
 
 if len(sys.argv)>1:
     full_ds=sys.argv[1]=="True"
@@ -88,16 +102,16 @@ for dense_size in lst_dense_size:
     model_centerloss_filename = os.path.join(Glb.results_folder, "Models", "model{}".format(filename_suffix))
     lc_centerloss_filename = os.path.join(Glb.results_folder, "LC", "lc{}".format(filename_suffix))
 
-    data_dir = Glb.images_balanced_folder
-    tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
+
 
     model_cl = train_cl.trainModel(full_ds=full_ds,
+                                   cnt_classes=cnt_classes,
                                    epochs=epochs,
                                    patience=patience,
                                    model_clsf_filename=model_clsf_filename,
                                    model_centerloss_filename=model_centerloss_filename,
                                    lc_centerloss_filename=lc_centerloss_filename,
-                                   data_dir=data_dir,
+                                   #data_dir=data_dir,
                                    tfrecord_dir=tfrecord_dir,
                                    lambda_centerloss=lambda_centerloss,
                                    pre_cl_layer_ind=pre_cl_layer_ind,

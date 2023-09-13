@@ -3,8 +3,8 @@ import numpy as np
 import pickle
 from trained_siam_model_names import suffix_name
 
-exper_indexes = [0,1,2]
-cnt_trainables = [100,8,4]
+exper_indexes = [10]
+cnt_trainables = [8] #[100,8,4]
 plot_title = "Siamese verifier, trainable layers count"
 
 

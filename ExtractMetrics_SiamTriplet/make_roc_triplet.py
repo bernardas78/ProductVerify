@@ -11,6 +11,10 @@ exper_indexes = [4,5,6,7,8]
 distTypes = ["Manhattan","Euclidean","Minkowski, p=3","Minkowski, p=4","Cosine"]
 plot_title = "Triplet verifier, Distance Type"
 
+exper_indexes = [10]
+distTypes = ["Euclidean"]
+plot_title = "Just a test for triplet"
+
 
 #for exper_index,cnt_trainable in zip(exper_indexes,cnt_trainables):
 for exper_index,distType in zip(exper_indexes, distTypes):

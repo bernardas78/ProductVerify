@@ -13,6 +13,8 @@ import tensorflow as tf
 from DataPrep.tfrecord_reader import parser
 
 class Glb:
+    isRetellect = False
+    isFruits360 = True
     #images_folder = '/home/bernardas/IsKnown_Images' if platform=='linux' else 'C:/IsKnown_Images_IsVisible'
 
     if platform=='linux':
@@ -45,6 +47,7 @@ class Glb:
         images_folder = 'A:/IsKnown_Images'
         # images_folder = 'C:/IsKnown_Images_IsVisible'
         images_balanced_folder = 'S:/IsKnown_Images_IsVisible'
+        images_balanced_folder_retellect = 'C:/Retellect.Demo20230726.Balanced'
         results_folder = 'A:/IsKnown_Results'
         graphs_folder = 'A:/IsKnown_Results/Graph'
         tensorboard_logs_folder = 'C:/IsKnown_TBLogs'
@@ -201,11 +204,12 @@ class MyIterator:
 
 class MyTfrecordIterator:
 
-    def __init__(self, tfrecord_path, batch_size=32, target_size=256):
+    def __init__(self, tfrecord_path, batch_size=32, target_size=256, cnt_classes=194):
         self.dataset = tf.data.TFRecordDataset(tfrecord_path).map(parser, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         self.tfrecord_path = tfrecord_path
         self.batch_size = batch_size
         self.target_size = target_size
+        self.cnt_classes = cnt_classes
 
         self.len_iterator = 0
         for raw_batch in self.dataset.batch(self.batch_size):
@@ -234,7 +238,7 @@ class MyTfrecordIterator:
                 #Init structure for entire batch
                 minibatch_size = raw_batch[1].shape[0]
                 X = tf.cast(raw_batch[0], tf.float32) / 255.
-                y = tf.one_hot ( raw_batch[1], 194)
+                y = tf.one_hot ( raw_batch[1], self.cnt_classes)
                 dummy = np.zeros((minibatch_size, 1))
 
                 #print ("batch_id, len(iter): {} {}".format(batch_id,self.len_iterator))

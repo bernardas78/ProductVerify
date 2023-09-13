@@ -11,8 +11,9 @@ x_names = {
     5: "_triplet_20230408_87285641.",  # Eucl      (8 trainable)  val_loss: 0.0676
     6: "_triplet_20230408_11875697.",  # Mink3     (8 trainable)  val_loss: 0.0676
     7: "_triplet_20230408_17346348.",  # Mink4     (8 trainable)  val_loss: 0.0661
-    8: "_triplet_20230408_45128494."   # Cosine     (8 trainable) val_loss: 0.2417
+    8: "_triplet_20230408_45128494.",   # Cosine     (8 trainable) val_loss: 0.2417
 
+    10: "_triplet_20230909_58097299."  # fruits360, 8 trainable, Eucl
 }
 
 

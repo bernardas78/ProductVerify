@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import sys
 from trained_model_names import model_names, experSuffix_names
+from PIL import Image, ImageDraw,ImageFont
 
 sys.path.insert(0,'..')
 
@@ -16,16 +17,12 @@ if Glb.isRetellect:
     data_dir = Glb.images_balanced_folder_retellect
     tfrecord_dir = os.path.join(data_dir, "PV_TFRecord")
     cnt_classes = 15
-elif Glb.isFruits360:
-    data_dir = Glb.images_balanced_folder
-    tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord_Fruits360")
-    cnt_classes = 131
 else:
     data_dir = Glb.images_balanced_folder
     tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
     cnt_classes = 194
 
-set_name = "Val"
+set_name = "Unknown"
 #set_name = "Train10"
 
 experName = ""
@@ -45,8 +42,7 @@ elif sys.argv[1] == "preClIndex":
     preClIndex = sys.argv[2]
 elif sys.argv[1] == "retellect":
     experName = sys.argv[1]
-elif sys.argv[1] == "fruits360":
-    experName = sys.argv[1]
+    prelast_size = 512
 else:
     prelast_size = int(sys.argv[1]) #512
     distName = sys.argv[2] #"Eucl"
@@ -62,9 +58,11 @@ tfrecord_filepath = os.path.join(tfrecord_dir, "{}.tfrecords".format(set_name))
 
 #dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}{}.csv".format(prelast_size,distName,mink_suffix,inclInterCenter,interc_suffix) )
 experSuffix = experSuffix_names(distName,prelast_size,p_minkowski,inclInterCenter,lambda2,experName,preClIndex, lambda1)
-dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists{}csv".format(experSuffix) )
+dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_top1{}csv".format(experSuffix) )
 df = pd.DataFrame (columns = ["correct", "dist"] )
 df.to_csv(dists_filename, mode="w", header=True, index=False)
+
+prod_names = pd.read_csv(r"D:\Retellect\sco-vision-service-api\model_20220629_15prekes.csv", header=None).iloc[:,0].tolist()
 
 def dists_to_center_minkowskisum(centers, prelast_activations, **kwargs):
     #   centers: (194 x 128)
@@ -155,11 +153,13 @@ func_prelast = K.function( [model_cl.input], [prelast_layer.output] )
 # get center values
 centers = cl_layer.get_weights()[0]
 print ("centers.shape={}".format(centers.shape))
-#assert (centers.shape==(cnt_classes,prelast_size)) # doesn't work if not pre-last layer
+assert (centers.shape==(cnt_classes,prelast_size))
 
 # load data
 my_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath, cnt_classes=cnt_classes)
 data_yielder = my_iterator.get_iterator_xy_ydummy()
+
+#print(model_cl.summary())
 
 # compute distance from center and log to file
 for batch_id in range(my_iterator.len()):
@@ -170,19 +170,45 @@ for batch_id in range(my_iterator.len()):
     x_y,y_dummy = next(data_yielder)
     assert ( x_y[0].shape[1:4] == (256,256,3) )
     assert ( x_y[1].shape[1:2] == (cnt_classes,) )
-    # calc dist to center
+
+    #predict top 1
+    y_hat, _ = model_cl.predict(x_y)
+    Y_hat = np.argmax(y_hat, axis=1)
+    #print ("y_hat:{}".format(Y_hat))
+
+# calc dist to center
     prelast_output = func_prelast(x_y)[0]
-    #assert (prelast_output.shape[1:2] == (prelast_size,)) # doesn't work if not pre-last layer
+    assert (prelast_output.shape[1:2] == (prelast_size,))
     dists_to_centers_batch = dists_to_center_f (centers = centers, prelast_activations=prelast_output, p=p_minkowski)
     assert (dists_to_centers_batch.shape[1:2] == (cnt_classes,))
 
-    # output 2 1D arrays to file: correct;dist
-    y_ravel = np.ravel(x_y[1])
-    dist_ravel = np.ravel(dists_to_centers_batch)
+# filter dists of top1's center
+    batch_size = y_hat.shape[0]
+    #print ("batch_size:{}".format(batch_size))
+    dists_to_top1_centers_batch = dists_to_centers_batch[np.arange(batch_size),Y_hat]
+    #print ("dists_to_centers_batch.shape: {}".format(dists_to_centers_batch))
+    #print("Y_hat:{}".format(Y_hat))
+    #print("dists_to_top1_centers_batch.shape: {}".format(dists_to_top1_centers_batch))
+
+# output 2 1D arrays to file: correct;dist
+    y_ravel = np.zeros(batch_size)
+    dist_ravel = dists_to_top1_centers_batch
     df = pd.DataFrame ()
     df['correct'] = y_ravel
     df['dist'] = dist_ravel
     df.to_csv(dists_filename, mode="a", header=False, index=False)
+
+    for img_id in range(batch_size):
+        #print ("x_y[0].shape: {}".format(x_y[0][img_id,:,:,:].shape))
+        img = Image.fromarray ( np.uint8(K.eval(x_y[0][img_id,:,:,:])*255.), mode="RGB" )
+
+        I1 = ImageDraw.Draw(img)
+        font=ImageFont.truetype("arial",size=20)
+        I1.text((28, 36), "Top 1: {}".format(prod_names[Y_hat[img_id]]), fill=(0, 255, 0), font=font)
+        I1.text((28, 56), "Dist: {}".format(dists_to_top1_centers_batch[img_id]), fill=(0, 255, 0), font=font)
+
+        img_filename = os.path.join(r"C:\Retellect.Demo20230726.Balanced\Unknown.Dist", "{}_{}.jpg".format(batch_id,img_id))
+        img.save(img_filename)
 
 # sanity check
 print ("Sanity check: dists calculated using [prelast_output-centers] vs. centerloss")

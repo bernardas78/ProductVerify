@@ -6,27 +6,30 @@ import os
 import pandas as pd
 import sys
 from trained_model_names import model_names, experSuffix_names
+from PIL import Image
+from matplotlib import pyplot as plt
 
 sys.path.insert(0,'..')
 
 from CenterLoss.centerLossLayer import CenterLossLayer, center_loss
 from Globals.globalvars import Glb, MyTfrecordIterator
 
-if Glb.isRetellect:
-    data_dir = Glb.images_balanced_folder_retellect
-    tfrecord_dir = os.path.join(data_dir, "PV_TFRecord")
-    cnt_classes = 15
-elif Glb.isFruits360:
-    data_dir = Glb.images_balanced_folder
-    tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord_Fruits360")
-    cnt_classes = 131
-else:
-    data_dir = Glb.images_balanced_folder
-    tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
-    cnt_classes = 194
 
-set_name = "Val"
-#set_name = "Train10"
+data_dir = Glb.images_balanced_folder
+cnt_classes = 194
+
+#set_name = "Val"
+set_name = "Train10"
+
+# from A:\IsKnown_Results\Dists\dists_512_Eucl.csv, needed to scale same as in roc calculation
+dist_min = 0.531
+dist_max = 1.075
+
+# from make_auc_byDistTypeAndNeuronCount_CenterLoss.py
+eer_threshold = 0.199
+
+selected_class_inds = [2,7,45]
+selected_class_names = ["Cucumber","Banana","Apple"]
 
 experName = ""
 preClIndex = -1234
@@ -37,33 +40,23 @@ inclInterCenter = False
 lambda2 = -1234234.34543
 lambda1 = "n/a"
 
-if sys.argv[1] == "lambda1" or sys.argv[1] == "cosineCl":
-    experName = sys.argv[1]
-    lambda1 = sys.argv[2]
-elif sys.argv[1] == "preClIndex":
-    experName = sys.argv[1]
-    preClIndex = sys.argv[2]
-elif sys.argv[1] == "retellect":
-    experName = sys.argv[1]
-elif sys.argv[1] == "fruits360":
-    experName = sys.argv[1]
-else:
-    prelast_size = int(sys.argv[1]) #512
-    distName = sys.argv[2] #"Eucl"
-    p_minkowski = int(sys.argv[3]) #2
-    inclInterCenter = sys.argv[4]=="True"
-    lambda2 = float(sys.argv[5])
-
+prelast_size = 512
+distName = "Eucl"
+p_minkowski = -1
+inclInterCenter = False
+lambda2=-1
 
 mink_suffix = "_{}".format(p_minkowski) if distName == "Minkowski" else ""
 interc_suffix = "_{:.3f}".format(lambda2) if inclInterCenter else ""
 
+tfrecord_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
 tfrecord_filepath = os.path.join(tfrecord_dir, "{}.tfrecords".format(set_name))
 
-#dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists_{}_{}{}_{}{}.csv".format(prelast_size,distName,mink_suffix,inclInterCenter,interc_suffix) )
+dists_filename = os.path.join ( "S:", "VerifResult", "dists.csv" )
 experSuffix = experSuffix_names(distName,prelast_size,p_minkowski,inclInterCenter,lambda2,experName,preClIndex, lambda1)
-dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists{}csv".format(experSuffix) )
-df = pd.DataFrame (columns = ["correct", "dist"] )
+#dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists{}csv".format(experSuffix) )
+verif_result_dir = os.path.join ( "S:", "VerifResult")
+df = pd.DataFrame (columns = ["batch_sample", "correct", "dist"] )
 df.to_csv(dists_filename, mode="w", header=True, index=False)
 
 def dists_to_center_minkowskisum(centers, prelast_activations, **kwargs):
@@ -158,7 +151,7 @@ print ("centers.shape={}".format(centers.shape))
 #assert (centers.shape==(cnt_classes,prelast_size)) # doesn't work if not pre-last layer
 
 # load data
-my_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath, cnt_classes=cnt_classes)
+my_iterator = MyTfrecordIterator(tfrecord_path=tfrecord_filepath)
 data_yielder = my_iterator.get_iterator_xy_ydummy()
 
 # compute distance from center and log to file
@@ -168,41 +161,91 @@ for batch_id in range(my_iterator.len()):
         print ("Batch {}/{}".format(batch_id,my_iterator.len()))
     # get data
     x_y,y_dummy = next(data_yielder)
-    assert ( x_y[0].shape[1:4] == (256,256,3) )
-    assert ( x_y[1].shape[1:2] == (cnt_classes,) )
+
+    X = x_y[0]
+    y = x_y[1]
+    Y = np.argmax(y, axis=1)
+
+    assert ( X.shape[1:4] == (256,256,3) )
+    assert ( y.shape[1:2] == (cnt_classes,) )
     # calc dist to center
     prelast_output = func_prelast(x_y)[0]
     #assert (prelast_output.shape[1:2] == (prelast_size,)) # doesn't work if not pre-last layer
     dists_to_centers_batch = dists_to_center_f (centers = centers, prelast_activations=prelast_output, p=p_minkowski)
     assert (dists_to_centers_batch.shape[1:2] == (cnt_classes,))
 
+    # normalize by full dataset's min/max
+    dists_to_centers_batch = (dists_to_centers_batch - dist_min) / (dist_max-dist_min)
+
     # output 2 1D arrays to file: correct;dist
-    y_ravel = np.ravel(x_y[1])
+    y_ravel = np.ravel(y)
+    #print ("np.sum(y_ravel): {}".format(np.sum(y_ravel)))
+    #print ("dists_to_centers_batch.shape: {}".format(dists_to_centers_batch.shape))
     dist_ravel = np.ravel(dists_to_centers_batch)
+
+    for sample_ind in range(X.shape[0]):
+
+        Y_i = Y[sample_ind]
+        if Y_i in selected_class_inds:
+
+            #print ("    sample_ind: {}".format(sample_ind))
+            #print ("y_ravel[sample_ind]:{}".format(y_ravel[sample_ind]))
+            #print ("dist_ravel[sample_ind]:{}".format(dist_ravel[sample_ind]))
+            #file_name = "{}_{}.jpg".format(  batch_id,sample_ind )
+            #file_name = os.path.join(verif_result_dir, file_name )
+
+            x_i = X[sample_ind,:,:,:]
+            x_i = K.eval( x_i )
+            x_i = np.uint8 ( x_i * 255 )
+            x_i = Image.fromarray(x_i)
+
+            #print ("type(x_i): {}".format(type(x_i)))
+            #print ("x_i.shape:{}".format(x_i.shape))
+            #x_i.save(file_name)
+
+            dists_to_centers_sample = dists_to_centers_batch[sample_ind,:]
+            assert (dists_to_centers_sample.shape==(194,))
+
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(3.9, 2.6), width_ratios=[2, 1])
+            fig.subplots_adjust(bottom=0, top=1, left=0, right=1, wspace=0, hspace=0)
+            ax1.set_xticks([])
+            ax1.set_yticks([])
+            ax1.imshow( x_i )
+
+            dists_to_centers_of_selected = np.array( [ dists_to_centers_sample[sel_class_ind] for sel_class_ind in selected_class_inds] )
+            colors = [ "red" if sel_class_ind!=Y_i else "green" for sel_class_ind in selected_class_inds]
+            ax2.hlines(dists_to_centers_of_selected, xmin=0.01, xmax=0.05, colors=colors)
+            [ax2.text(0.1, dist_item-1e-2, "{:.3f} {}".format(dist_item, selected_class_names[i])) for (i,dist_item) in enumerate(dists_to_centers_of_selected) ]
+
+            # eer
+            ax2.hlines ([eer_threshold], xmin=0.01, xmax=1.0, colors=["blue"], linestyles='dashed')
+            ax2.text (0.1, eer_threshold+1e-2, "Thr.@EER", color="blue")
+
+            ax2.set_xticks([])
+            ax2.set_yticks([])
+            ax2.set_xlim(0.0, 1.0)
+            ax2.set_ylim( np.min(dists_to_centers_of_selected)-0.1, np.max(dists_to_centers_of_selected)+0.1)
+            for pos in ['right', 'top', 'bottom', 'left']:
+                plt.gca().spines[pos].set_visible(False)
+
+            file_name_numbers = "{}_{}_numbers.jpg".format(  batch_id,sample_ind )
+            file_name_numbers = os.path.join(verif_result_dir, file_name_numbers )
+
+            plt.savefig(file_name_numbers)
+            plt.close()
+
+
+            #plt.hlines ()
+
+
     df = pd.DataFrame ()
+
+    m = X.shape[0]
+    n = dists_to_centers_batch.shape[1]
+
+    df['batch_sample'] = ["{}_{}".format(batch_id, sample_id) for sample_id in np.repeat(np.arange(m), n) ]
     df['correct'] = y_ravel
     df['dist'] = dist_ravel
     df.to_csv(dists_filename, mode="a", header=False, index=False)
 
-# sanity check
-print ("Sanity check: dists calculated using [prelast_output-centers] vs. centerloss")
-_, cl = model_cl.predict(x_y)
-y = x_y[1]
-for i in range( y.shape[0] ):
-#for i in range(1):
-    Y = np.argmax(y[i])
-    dist_center = prelast_output[i] - centers[Y]
-    #print("dist_center:{}".format(dist_center))
-
-    if distName=="Eucl":
-        dist_center_total = np.sqrt ( np.sum(dist_center**2) )
-    elif distName=="Manhattan":
-        dist_center_total = np.sum ( np.abs(dist_center) )
-    elif distName == "Minkowski":
-        dist_center_total = np.power(np.sum(np.power(np.abs(dist_center),p_minkowski)),1/p_minkowski)
-    else:
-        raise Exception("Unknown dist name")
-
-    print ( "dist_center_total:{}; cl:{}".format(dist_center_total, cl[i][0]))
-    assert math.isclose(dist_center_total, cl[i][0], rel_tol=1e-4)
 

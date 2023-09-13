@@ -5,9 +5,9 @@ from tensorflow.keras.layers import Input, Dense
 from tensorflow import keras
 from CenterLoss.centerLossLayer import CenterLossLayer
 
-def make_model_cl (model_clsf, dense_size, distName, p_minkowski, inclInterCenter, lambda2, pre_cl_layer_ind=0):
+def make_model_cl (model_clsf, Softmax_size, dense_size, distName, p_minkowski, inclInterCenter, lambda2, pre_cl_layer_ind=0):
 
-    Softmax_size = model_clsf.output_shape[1]
+    #Softmax_size = model_clsf.output_shape[1]
     #print ("Softmax_size: {}".format(Softmax_size))
 
     # second input - labels

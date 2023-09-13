@@ -8,6 +8,7 @@ import pickle
 from trained_triplet_model_names import suffix_name
 
 exper_indexes = [1,2,3,4,5,6,7,8]
+exper_indexes = [10]
 
 for exper_index in exper_indexes:
     experSuffix = suffix_name(exper_index)

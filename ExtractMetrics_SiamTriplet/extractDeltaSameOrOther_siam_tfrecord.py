@@ -7,6 +7,7 @@ import pandas as pd
 import sys
 from trained_siam_model_names import model_name, suffix_name
 from Loss.siamloss import theloss
+from ModelArch.make_siam_from_clsf import *
 
 sys.path.insert(0,'..')
 
@@ -15,22 +16,30 @@ from Globals.globalvars import Glb, MyPairsIterator
 set_name = "Val"
 #set_name = "Train10"
 
-exper_indexes = [5]
+exper_indexes = [10]
 
-tfrecord_fullds_path = os.path.join(Glb.images_folder, "PV_TFRecord", "{}.tfrecords".format(set_name))
-tfrecords_byclass_path = os.path.join(Glb.images_folder, "PV_TFRecord_ByClass", set_name)
+if Glb.isFruits360:
+    tfrecord_fullds_path = os.path.join(Glb.images_folder, "PV_TFRecord_Fruits360", "{}.tfrecords".format(set_name) )
+    tfrecords_byclass_path = os.path.join ( Glb.images_folder, "PV_TFRecord_Fruits360_ByClass", set_name )
+    cnt_classes=131
+else:
+    tfrecord_fullds_path = os.path.join(Glb.images_folder, "PV_TFRecord", "{}.tfrecords".format(set_name))
+    tfrecords_byclass_path = os.path.join(Glb.images_folder, "PV_TFRecord_ByClass", set_name)
+    cnt_classes=194
 
 
 for exper_index in exper_indexes:
-    # load data
-    my_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path,tfrecords_byclass_path=tfrecords_byclass_path)
-    data_yielder = my_iterator.get_iterator_pair()
 
     # load model
     model_siam_filename = os.path.join(Glb.results_folder, "Models", model_name(exper_index) )
     print ("Loading {}".format(model_siam_filename))
     model_siam = load_model(model_siam_filename, custom_objects={'contrastive_loss': theloss(margin=1)})
     print ("Loaded")
+
+    # load data
+    my_iterator = MyPairsIterator(tfrecord_fullds_path=tfrecord_fullds_path,tfrecords_byclass_path=tfrecords_byclass_path, cnt_classes=cnt_classes)
+    data_yielder = my_iterator.get_iterator_pair()
+
 
     dists_filename = os.path.join ( Glb.results_folder, "Dists", "dists{}csv".format(suffix_name(exper_index)) )
     df = pd.DataFrame (columns = ["correct", "delta"] )

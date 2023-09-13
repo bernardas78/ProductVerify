@@ -66,7 +66,7 @@ rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.00
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.001
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py 512 Eucl 0 True 0.000
 
-..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -10
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -10
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -9
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -8
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "preClIndex" -7
@@ -92,3 +92,8 @@ rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "cosineCl" "0.300"
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "cosineCl" "1.000"
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "cosineCl" "3.000"
 rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "cosineCl" "9.900"
+
+rem ..\venv\Scripts\python extractDistToCenters_tfrecord.py "retellect"
+rem ..\venv\Scripts\python extractDistToCenters_top1_tfrecord.py "retellect"
+
+..\venv\Scripts\python extractDistToCenters_tfrecord.py "fruits360"

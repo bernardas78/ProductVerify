@@ -8,16 +8,19 @@ from tfrecord_reader import parser
 import time
 import random
 
-#set_name="Train"
-set_name="Train10"
-#set_name="Test"
+set_name="Train"
+#set_name="Train10"
+#set_name="Val"
 
 batch_size=32
 div255_resnet = "div255"
 
 img_filepath = os.path.join( Glb.images_balanced_folder, set_name)
 #data_iterator = Glb_Iterators.get_iterator(img_filepath, div255_resnet=div255_resnet, batch_size=batch_size)
-tfrecord_path_template = os.path.join ( Glb.images_folder, "PV_TFRecord_ByClass", format(set_name)  )
+tfrecord_path_template = os.path.join ( Glb.images_folder, "PV_TFRecord_ByClass", set_name  )
+
+img_filepath = os.path.join( "A:/Fruits360/Balanced", set_name)
+tfrecord_path_template = os.path.join ( Glb.images_folder, "PV_TFRecord_Fruits360_ByClass", set_name )
 
 def _bytes_feature(value):
   """Returns a bytes_list from a string / byte."""
@@ -63,6 +66,14 @@ for i,barcode in enumerate(os.listdir(img_filepath)):
             in_jpg_encoding = tf.io.read_file( os.path.join(barcode_path, filename) )
 
             image_shape = tf.io.extract_jpeg_shape(in_jpg_encoding, output_type=tf.dtypes.int32, name=None)
+
+            # Fruits360 original images were 100x100x3
+            if not np.array_equal(image_shape, [256, 256, 3]):
+                # print ("resize")
+                image = tf.image.decode_jpeg(in_jpg_encoding, channels=3)
+                image = tf.cast(tf.image.resize(image, [256, 256]), tf.uint8)
+                in_jpg_encoding = tf.image.encode_jpeg(image)
+                image_shape = tf.io.extract_jpeg_shape(in_jpg_encoding, output_type=tf.dtypes.int32, name=None)
 
             # img = Image.open(filename)
             # image_raw = img.tostring()

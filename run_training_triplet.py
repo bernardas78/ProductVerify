@@ -30,7 +30,7 @@ else:
 if len(sys.argv)>5:
     distName = sys.argv[5]
 else:
-    distName = "Cosine"
+    distName = "Eucl"
 
 print( "full_ds:{}".format( full_ds ) )
 print( "epochs:{}".format( epochs ) )
@@ -47,11 +47,19 @@ filename_suffix = "_triplet_{}_{}.h5".format(
 model_triplet_filename = os.path.join(Glb.results_folder, "Models", "model{}".format(filename_suffix))
 lc_triplet_filename = os.path.join(Glb.results_folder, "LC", "lc{}".format(filename_suffix))
 
-data_dir = Glb.images_balanced_folder
-tfrecord_fullds_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
-tfrecord_byclass_dir = os.path.join(Glb.images_folder, "PV_TFRecord_ByClass")
+#data_dir = Glb.images_balanced_folder
+
+if Glb.isFruits360:
+    tfrecord_fullds_dir = os.path.join(Glb.images_folder, "PV_TFRecord_Fruits360")
+    tfrecord_byclass_dir = os.path.join(Glb.images_folder, "PV_TFRecord_Fruits360_ByClass")
+    cnt_classes = 131
+else:
+    tfrecord_fullds_dir = os.path.join(Glb.images_folder, "PV_TFRecord")
+    tfrecord_byclass_dir = os.path.join(Glb.images_folder, "PV_TFRecord_ByClass")
+    cnt_classes = 194
 
 model_triplet = train_triplet.trainModel(full_ds=full_ds,
+                                 cnt_classes=cnt_classes,
                                  epochs=epochs,
                                  patience=patience,
                                  model_clsf_filename=model_clsf_filename,
