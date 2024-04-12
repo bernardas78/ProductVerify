@@ -11,17 +11,17 @@ from trained_model_names import experSuffix_names
 preClIndex = "-8"
 
 #experName = "lambda1"
-#experName = "cosineCl"
+experName = "cosineCl"
 #experName = "retellect"
-experName = "fruits360"
+#experName = "fruits360"
+#experName = "proxynca"
 
 #dist_name = "Manhattan"
 #dist_name = "Eucl"
 #dist_name = "Minkowski"
 dist_name = "Cosine"
 
-#p_minkowski = 3
-p_minkowski = 4
+p_minkowski = 1
 
 inclInterCenter = False
 lambda2 = 0.000
@@ -37,7 +37,7 @@ lst_auc = {}
 lst_cnt_neurs = [512]
 
 cnt_neurs = 512
-for lambda1 in [ "3.000"]: #, "9.900", "0.010", "0.030", "0.100", "0.300", "1.000",
+for lambda1 in [ "0.300"]: #, "9.900", "0.010", "0.030", "0.100", "0.300", "1.000",
 #for preClIndex in ["-10","-9","-8","-7","-6","-5","-4","-3","-2","0"]:
 #for cnt_neurs in lst_cnt_neurs:
     experSuffix = experSuffix_names(dist_name, cnt_neurs, p_minkowski, inclInterCenter, lambda2, experName, preClIndex, lambda1)

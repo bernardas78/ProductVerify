@@ -1,3 +1,4 @@
+import Globals.globalvars
 
 x_names_Eucl = {
     2: "_centerloss_20221108_dense_2.",         # was: roc_data_2_Eucl_False.h5
@@ -117,6 +118,22 @@ x_names_fruits360 = {
     0: "_centerloss_20230906_dense_512_Eucl_False_0.000_40164903."
 }
 
+x_names_proxynca = {
+    "Cosine": "_proxynca_20240222_61234878.",   # sco ds, cosine
+    #0: "_proxynca_20240227_64178771."   # fruits-360, cosine
+    #"Minkowski1": "_proxynca_20240312_47399939.",   # fruits-360, manh
+    #"Minkowski2": "_proxynca_20240306_79585935."   # sco m=10, eucl
+    "Minkowski1": "_proxynca_20240307_99522849.",  # sco, manh
+    "Minkowski2": "_proxynca_20240306_25254691.",  # sco, eucl
+    "Minkowski3": "_proxynca_20240309_84777835.",  # sco, Mink3
+    "Minkowski4": "_proxynca_20240310_75653580.",  # sco, Mink4
+}
+
+x_names_proxynca_fruits360 = {
+    "Cosine": "_proxynca_20240227_64178771.",   # fruits-360, cosine
+    "Minkowski1": "_proxynca_20240312_47399939.",   # fruits-360, manh
+}
+
 x_names = {
     "Eucl": x_names_Eucl,
     "Eucl_inclInterCenter": x_names_Eucl_inclInterCenter,
@@ -127,10 +144,16 @@ x_names = {
     "lambda1": x_names_lambda1,
     "cosineCl": x_names_cosineCl,
     "retellect": x_names_retellect,
-    "fruits360": x_names_fruits360
+    "fruits360": x_names_fruits360,
+    "proxynca": x_names_proxynca_fruits360 if Globals.globalvars.Glb.isFruits360 else x_names_proxynca
 }
 
 def dic_and_key (dist_name, prelast_size, p_minkowski, inclInterCenter, lambda2, experName, preClIndex="n/a", lambda1="n/a"):
+    if experName == "proxynca":
+        dic = x_names["proxynca"]
+        mink_suffix = "" if dist_name!="Minkowski" else p_minkowski
+        key = "{}{}".format(dist_name, mink_suffix)
+        return (dic, key)
     if experName == "fruits360":
         dic = x_names["fruits360"]
         key = 0

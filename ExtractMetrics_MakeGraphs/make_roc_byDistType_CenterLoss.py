@@ -6,7 +6,7 @@ from ExtractMetrics_SiamTriplet.trained_siam_model_names import suffix_name as s
 from ExtractMetrics_SiamTriplet.trained_triplet_model_names import suffix_name as suffix_name_triplet
 from ExtractMetrics.trained_model_names import experSuffix_names as experSuffix_names_cl
 
-plot_title = "Center Loss Verification ROC AUC ~ Distance Type"
+plot_title = "Centre-Loss Verification ROC AUC ~ Distance Type"
 legend_title = "AUC = f (Distance Type)"
 dest_filename = "roc_byDistType_CenterLoss.png"
 
@@ -15,12 +15,12 @@ experSuffixes = {
                                       lambda2=0, experName="xxx"),
     'Manhattan': experSuffix_names_cl(dist_name="Manhattan", prelast_size=768, p_minkowski=0, inclInterCenter=False,
                                       lambda2=0, experName="xxx"),
+    'Cosine': experSuffix_names_cl(dist_name="xxx", prelast_size=-1, p_minkowski=0, lambda1="0.300", inclInterCenter=False,
+                                            lambda2=0, experName="cosineCl"),
     'Minkowski (p=3)': experSuffix_names_cl(dist_name="Minkowski", prelast_size=2048, p_minkowski=3, inclInterCenter=False,
                                       lambda2=0, experName="xxx"),
     'Minkowski (p=4)': experSuffix_names_cl(dist_name="Minkowski", prelast_size=2048, p_minkowski=4, inclInterCenter=False,
                                       lambda2=0, experName="xxx"),
-    'Cosine': experSuffix_names_cl(dist_name="xxx", prelast_size=-1, p_minkowski=0, lambda1="0.300", inclInterCenter=False,
-                                            lambda2=0, experName="cosineCl"),
 }
 bold_index = 0
 

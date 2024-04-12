@@ -11,9 +11,10 @@ legend_title = "AUC = f (NN type)"
 dest_filename = "roc_bymethod_bestdist.png"
 
 experSuffixes = {
+    'Proxy-NCA': experSuffix_names_cl(experName="proxynca",dist_name="Minkowski", prelast_size=-1, p_minkowski=1, inclInterCenter=False, lambda2=-1e+10),
     'Siamese': suffix_name_siam(1),
     'Triplet': suffix_name_triplet(5),
-    'Center Loss': experSuffix_names_cl(dist_name="Eucl", prelast_size=768, p_minkowski=0, inclInterCenter=False, lambda2=0, experName="xxx")
+    'Centre-Loss': experSuffix_names_cl(dist_name="Eucl", prelast_size=768, p_minkowski=0, inclInterCenter=False, lambda2=0, experName="xxx"),
 }
 bold_index = 0
 

@@ -14,7 +14,7 @@ from DataPrep.tfrecord_reader import parser
 
 class Glb:
     isRetellect = False
-    isFruits360 = True
+    isFruits360 = False
     #images_folder = '/home/bernardas/IsKnown_Images' if platform=='linux' else 'C:/IsKnown_Images_IsVisible'
 
     if platform=='linux':
@@ -244,6 +244,48 @@ class MyTfrecordIterator:
                 #print ("batch_id, len(iter): {} {}".format(batch_id,self.len_iterator))
                 yield (X, y), (y, dummy)
 
+class MyProxyNcaTfrecordIterator:
+
+    def __init__(self, tfrecord_path, batch_size=32, target_size=256, cnt_classes=194):
+        self.dataset = tf.data.TFRecordDataset(tfrecord_path).map(parser, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        self.tfrecord_path = tfrecord_path
+        self.batch_size = batch_size
+        self.target_size = target_size
+        self.cnt_classes = cnt_classes
+
+        self.len_iterator = 0
+        for raw_batch in self.dataset.batch(self.batch_size):
+            self.len_iterator += 1 #raw_batch[1].shape[0]
+
+        #self.all_classes = os.listdir(self.data_folder)
+        #self.all_classes.sort()
+        #self.all_filepaths = [ os.path.join(classs,filename) for classs in self.all_classes for filename in os.listdir( os.path.join(self.data_folder,classs)) ]
+        #random.shuffle(self.all_filepaths)
+
+        #self.len_iterator = math.ceil( len ( self.all_filepaths ) / self.batch_size )
+
+
+    def len(self):
+        return self.len_iterator
+
+    def get_iterator_xy_dummy (self):
+        # print ("Inside get_iterator_xy_ydummy")
+        # get a list of all files
+        while True:
+            for raw_batch in self.dataset.batch(self.batch_size):
+                # Indexes of first/last image
+                #first_sample_id = batch_id*self.batch_size
+                #last_sample_id = np.minimum ( first_sample_id+self.batch_size, len(self.all_filepaths) )
+
+                #Init structure for entire batch
+                minibatch_size = raw_batch[1].shape[0]
+                X = tf.cast(raw_batch[0], tf.float32) / 255.
+                y = tf.one_hot ( raw_batch[1], self.cnt_classes)
+                dummy = np.zeros((minibatch_size, 1))
+
+                #print ("batch_id, len(iter): {} {}".format(batch_id,self.len_iterator))
+                yield (X, y), (dummy)
+
 class MyPairsIterator:
 
     def __init__(self, tfrecord_fullds_path, tfrecords_byclass_path, batch_size=32, target_size=256, cnt_classes=194):
@@ -348,3 +390,4 @@ class MyTripletIterator:
                 dummy =tf.zeros((minibatch_size,), dtype=tf.experimental.numpy.float32)
 
                 yield ((XAnc, XPos, XNeg) , dummy)
+

@@ -22,6 +22,7 @@ ps_minkowski = [0,0,3,4]
 
 auc_print_lines = {"Manhattan":[], "Eucl":[], "Minkowski_3":[], "Minkowski_4":[]}
 acc_print_lines = {"Manhattan":[], "Eucl":[], "Minkowski_3":[], "Minkowski_4":[]}
+eer_print_lines = {"Manhattan":[], "Eucl":[], "Minkowski_3":[], "Minkowski_4":[]}
 thr_print_lines = {"Manhattan":[], "Eucl":[], "Minkowski_3":[], "Minkowski_4":[]}
 
 
@@ -82,6 +83,7 @@ for dist_name, p_minkowski in zip(dist_names,ps_minkowski):
         #print("	\hline")
         auc_print_lines[dist_name+mink_suffix] += [r" & {:.3f} ".format(lst_auc[cnt_neurs])]
         acc_print_lines[dist_name+mink_suffix] += [r" & {:.3f} ".format(1.-eer)]
+        eer_print_lines[dist_name+mink_suffix] += [r" & {:.3f} ".format(eer)]
         thr_print_lines[dist_name+mink_suffix] += [r" & {:.3f} ".format(thr) ]
 
 
@@ -132,13 +134,16 @@ for i,cnt_neurs in enumerate(lst_cnt_neurs):
     print("	\hline")
 
 print ('')
-print ('ACCURACY')
+#print ('ACCURACY')
+print ('EER')
 print ('')
 
 for i,cnt_neurs in enumerate(lst_cnt_neurs):
     printer = r"{}".format(cnt_neurs)
-    for dist_key in acc_print_lines:
-        printer += acc_print_lines[dist_key][i]
+    #for dist_key in acc_print_lines:
+    #    printer += acc_print_lines[dist_key][i]
+    for dist_key in eer_print_lines:
+        printer += eer_print_lines[dist_key][i]
     printer += r"\\"
     print (printer)
     print("	\hline")

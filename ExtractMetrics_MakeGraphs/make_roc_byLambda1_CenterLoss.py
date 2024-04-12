@@ -61,8 +61,9 @@ for experIndex in experSuffixes:
     eer_ind = np.argmin(np.abs(lst_fpr+lst_tpr-1))
     eer = (lst_fpr[eer_ind] + 1 - lst_tpr[eer_ind]) / 2.
     acc = 1. - eer
-    print(r"	{} & {:.3f} & {:.3f} \\".format(experIndex,lst_auc,acc))
-    print("	\hline")
+    #print(r"	{} & {:.3f} & {:.3f} \\".format(experIndex,lst_auc,acc))
+    print(r"	{} & {:.3f} & {:.3f} \\".format(experIndex,lst_auc,eer))
+    #print("	\hline")
 
 plt.plot ( [0.0, 1.0], [0.0, 1.0], linestyle='dashed', lw=0.5)
 plt.text(0.4, 0.37, "Random classifier", rotation=35)

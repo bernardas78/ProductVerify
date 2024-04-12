@@ -15,19 +15,19 @@ lst_cnt_neurs = [512]
 preClIndex = "-2"
 
 #experName= "lambda1"
-#experName= "cosineCl"
+experName= "cosineCl"
 #experName= "retellect"
-experName= "fruits360"
+#experName= "fruits360"
+#experName= "proxynca"
 
-lambda1 = "1.000"
+lambda1 = "0.300"
 
 #dist_name = "Manhattan"
 #dist_name = "Eucl"
 #dist_name = "Minkowski"
 dist_name = "Cosine"
 
-p_minkowski = 3
-#p_minkowski = 4
+p_minkowski = 1
 
 inclInterCenter = False
 

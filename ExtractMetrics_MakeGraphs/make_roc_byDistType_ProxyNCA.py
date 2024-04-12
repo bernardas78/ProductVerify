@@ -6,23 +6,16 @@ from ExtractMetrics_SiamTriplet.trained_siam_model_names import suffix_name as s
 from ExtractMetrics_SiamTriplet.trained_triplet_model_names import suffix_name as suffix_name_triplet
 from ExtractMetrics.trained_model_names import experSuffix_names as experSuffix_names_cl
 
-plot_title = r"Center Loss Verification ROC AUC ~ Inter-Center Weight $\lambda$2"
-legend_title = r"AUC = f ( $\lambda$2 )"
-dest_filename = "roc_byLambda2_InterCenter_CenterLoss.png"
+plot_title = "Proxy-NCA Verification ROC AUC ~ Distance Type"
+legend_title = "AUC = f (Distance Type)"
+dest_filename = "roc_byDistType_ProxyNCA.png"
 
 experSuffixes = {
-    '0.000': experSuffix_names_cl(dist_name="Eucl", inclInterCenter=True, prelast_size=512, experName="xxx",
-                                  lambda2=0.0, preClIndex="0", p_minkowski=0),
-    '0.003': experSuffix_names_cl(dist_name="Eucl", inclInterCenter=True, prelast_size=512, experName="xxx",
-                                  lambda2=0.003, preClIndex="0", p_minkowski=0),
-    '0.001': experSuffix_names_cl(dist_name="Eucl", inclInterCenter=True, prelast_size=512, experName="xxx",
-                                  lambda2=0.001, preClIndex="0", p_minkowski=0),
-    '0.010': experSuffix_names_cl(dist_name="Eucl", inclInterCenter=True, prelast_size=512, experName="xxx",
-                                  lambda2=0.01, preClIndex="0", p_minkowski=0),
-    '0.030': experSuffix_names_cl(dist_name="Eucl", inclInterCenter=True, prelast_size=512, experName="xxx",
-                                  lambda2=0.03, preClIndex="0", p_minkowski=0),
-    '0.100': experSuffix_names_cl(dist_name="Eucl", inclInterCenter=True, prelast_size=512, experName="xxx",
-                                  lambda2=0.1, preClIndex="0", p_minkowski=0),
+    'Manhattan': experSuffix_names_cl(experName="proxynca", dist_name="Minkowski", prelast_size=512, p_minkowski=1, inclInterCenter=False, lambda2=0.),
+    'Euclidean': experSuffix_names_cl(experName="proxynca", dist_name="Minkowski", prelast_size=512, p_minkowski=2, inclInterCenter=False, lambda2=0.),
+    'Minkowski (p=3)': experSuffix_names_cl(experName="proxynca", dist_name="Minkowski", prelast_size=512, p_minkowski=3, inclInterCenter=False, lambda2=0.),
+    'Minkowski (p=4)': experSuffix_names_cl(experName="proxynca", dist_name="Minkowski", prelast_size=512, p_minkowski=4, inclInterCenter=False, lambda2=0.),
+    'Cosine': experSuffix_names_cl(experName="proxynca", dist_name="Cosine", prelast_size=512, p_minkowski=0, inclInterCenter=False, lambda2=0.),
 }
 bold_index = 0
 
@@ -59,9 +52,8 @@ for experIndex in experSuffixes:
     eer_ind = np.argmin(np.abs(lst_fpr+lst_tpr-1))
     eer = (lst_fpr[eer_ind] + 1 - lst_tpr[eer_ind]) / 2.
     acc = 1. - eer
-    #print(r"	{} & {:.3f} & {:.3f} \\".format(experIndex,lst_auc,acc))
-    print(r"	{} & {:.3f} & {:.3f} \\".format(experIndex,lst_auc,eer))
-    #print("	\hline")
+    print(r"	{} & {:.3f} & {:.3f} \\".format(experIndex,lst_auc,acc))
+    print("	\hline")
 
 plt.plot ( [0.0, 1.0], [0.0, 1.0], linestyle='dashed', lw=0.5)
 plt.text(0.4, 0.37, "Random classifier", rotation=35)
